@@ -35,3 +35,6 @@ websockets
 fastapi
 uvicorn
 pydantic
+
+# Clean Architecture
+dependency-injector
