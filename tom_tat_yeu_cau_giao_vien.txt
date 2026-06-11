@@ -44,3 +44,458 @@ YÊU CẦU CHUNG:
 - Lựa chọn mô hình phù hợp với phần được giao
 - Tập trung vào chất lượng hơn là làm tất cả
 - Có thể xây dựng trên kết quả của các nhóm trước
+
+
+Dựa trên:
+
+Đề bài giảng viên yêu cầu (RNN/LSTM/BiLSTM cho dự đoán chứng khoán/crypto/forex)
+Dataset OHLCV + Technical Indicators + Sentiment + Macro Data
+Hướng nghiên cứu trong tài liệu Pythonic Quant: A Comprehensive Guide to Python in Finance
+Mong muốn thiết kế theo Clean Architecture, SOLID, dễ mở rộng và ít phụ thuộc
+
+Mình đề xuất thiết kế cuối cùng ở mức gần với hệ thống Quantitative Trading Platform thu nhỏ, thay vì chỉ là một notebook train model.
+
+1. Mục tiêu hệ thống
+Dự đoán giá BTC/ETH trong tương lai
+
+Input:
+    - Historical OHLCV
+    - Technical Indicators
+    - Gold
+    - DXY
+    - News Sentiment
+    - X.com Sentiment
+
+Output:
+    - Giá dự đoán
+    - Xu hướng tăng/giảm
+    - Độ tin cậy
+
+Models:
+    - Linear Regression
+    - XGBoost
+    - LSTM
+    - BiLSTM
+    - Transformer
+2. Kiến trúc tổng thể
+┌────────────────────────────┐
+│       Dashboard/API        │
+└─────────────┬──────────────┘
+              │
+
+┌─────────────▼──────────────┐
+│      Application Layer     │
+│         Use Cases          │
+└─────────────┬──────────────┘
+              │
+
+┌─────────────▼──────────────┐
+│        Domain Layer        │
+│ Business Rules & Contracts │
+└─────────────┬──────────────┘
+              │
+
+┌─────────────▼──────────────┐
+│    Infrastructure Layer    │
+└────────────────────────────┘
+3. Thư mục dự án
+crypto_prediction/
+
+├── domain/
+│
+├── application/
+│
+├── infrastructure/
+│
+├── presentation/
+│
+├── tests/
+│
+├── config/
+│
+└── main.py
+4. Domain Layer
+
+Không phụ thuộc:
+
+Binance
+Twitter
+OpenAI
+PyTorch
+TensorFlow
+XGBoost
+
+Chỉ chứa logic nghiệp vụ.
+
+domain/
+
+├── entities/
+│
+│   ├── market_data.py
+│   ├── sentiment.py
+│   ├── feature_vector.py
+│   └── prediction.py
+│
+├── interfaces/
+│
+│   ├── data_provider.py
+│   ├── feature_generator.py
+│   ├── sentiment_analyzer.py
+│   ├── predictor.py
+│   └── model_repository.py
+│
+└── services/
+    ├── prediction_service.py
+    └── feature_service.py
+5. Data Collection Layer
+Historical Data
+BTC
+ETH
+
+Open
+High
+Low
+Close
+Volume
+
+Nguồn:
+
+Binance
+CoinGecko
+Yahoo Finance
+Macro Data
+Gold Price
+
+DXY
+
+Interest Rate
+
+CPI
+Sentiment Data
+Twitter/X
+
+Reddit
+
+Crypto News
+6. Feature Engineering Layer
+
+Đây là phần quyết định độ chính xác.
+
+Feature nhóm 1
+
+OHLCV
+
+Open
+High
+Low
+Close
+Volume
+Feature nhóm 2
+
+Technical Indicators
+
+RSI
+
+MACD
+
+ATR
+
+MA20
+
+MA50
+
+EMA20
+
+EMA50
+
+Bollinger Bands
+Feature nhóm 3
+
+Sentiment
+
+Average Sentiment
+
+Positive Ratio
+
+Negative Ratio
+
+News Impact Score
+Feature nhóm 4
+
+Macro
+
+Gold Return
+
+DXY Return
+
+Interest Rate
+
+CPI
+Kết quả
+
+Một vector dữ liệu:
+
+[
+close,
+volume,
+
+RSI,
+MACD,
+ATR,
+
+MA20,
+MA50,
+
+gold_return,
+dxy_return,
+
+news_sentiment,
+twitter_sentiment
+]
+7. Data Pipeline
+
+Tách riêng từng bước.
+
+FeaturePipeline
+
+├── MissingValueHandler
+├── OutlierHandler
+├── TechnicalFeatureGenerator
+├── SentimentFeatureGenerator
+├── MacroFeatureGenerator
+└── Normalizer
+
+Ví dụ:
+
+pipeline = [
+    MissingValueHandler(),
+    TechnicalFeatureGenerator(),
+    SentimentFeatureGenerator(),
+    Normalizer()
+]
+
+Sau này thêm:
+
+WhaleTransactionFeatureGenerator()
+
+không cần sửa code cũ.
+
+8. Model Layer
+Interface chung
+class Predictor:
+
+    train()
+
+    predict()
+
+    save()
+
+    load()
+Model implementations
+LinearRegressionPredictor
+
+XGBoostPredictor
+
+LSTMPredictor
+
+BiLSTMPredictor
+
+TransformerPredictor
+9. Deep Learning Architecture
+LSTM
+
+Input
+
+30 ngày gần nhất
+
+Ví dụ:
+
+Day1
+Day2
+...
+Day30
+
+Output
+
+BTC ngày 31
+BiLSTM
+Input Layer
+
+↓
+
+BiLSTM Layer
+
+↓
+
+Dropout
+
+↓
+
+Dense
+
+↓
+
+Output
+Transformer
+Input
+
+↓
+
+Embedding
+
+↓
+
+Positional Encoding
+
+↓
+
+Multi Head Attention
+
+↓
+
+Feed Forward
+
+↓
+
+Dense
+
+↓
+
+Prediction
+10. Ensemble Layer
+
+Nếu có thời gian.
+
+LSTM
+
+BiLSTM
+
+Transformer
+
+↓
+
+Weighted Average
+
+↓
+
+Final Prediction
+
+Hoặc
+
+XGBoost
+
+LSTM
+
+Transformer
+
+↓
+
+Meta Learner
+11. Evaluation Layer
+Regression
+MAE
+
+RMSE
+
+MAPE
+
+R²
+Direction Accuracy
+
+Quan trọng trong trading.
+
+Prediction ↑
+
+Reality ↑
+
+Correct
+
+Đánh giá:
+
+Accuracy
+
+Precision
+
+Recall
+
+F1
+12. Backtesting Layer
+
+Mô phỏng giao dịch.
+
+Nếu prediction > 2%
+
+BUY
+
+Nếu prediction < -2%
+
+SELL
+
+Đánh giá:
+
+Profit
+
+PnL
+
+Sharpe Ratio
+
+Max Drawdown
+
+Win Rate
+
+Đây là phần thường giúp báo cáo được đánh giá cao vì không chỉ dự đoán mà còn kiểm tra khả năng sinh lợi.
+
+13. Dashboard
+
+Dùng:
+
+FastAPI (Backend)
+Streamlit (Frontend)
+
+Hiển thị:
+
+Current BTC Price
+
+Current ETH Price
+
+Prediction Tomorrow
+
+Prediction 7 Days
+
+Sentiment Trend
+
+Latest Crypto News
+
+Model Comparison
+
+Backtesting Results
+14. Kiến trúc phù hợp nhất cho đồ án
+
+Nếu làm nhóm 3–5 người và muốn chuyên nghiệp:
+
+Data Layer
+    ↓
+
+Feature Engineering Layer
+    ↓
+
+Model Layer
+    ├── Linear Regression
+    ├── XGBoost
+    ├── LSTM
+    ├── BiLSTM
+    └── Transformer
+    ↓
+
+Evaluation Layer
+    ↓
+
+Backtesting Layer
+    ↓
+
+API Layer
+    ↓
+
+Dashboard Layer
+
+Kiến trúc này bám sát các hệ thống Quant/AI Finance hiện đại, tuân thủ nguyên tắc Single Responsibility, Open-Closed, dễ thay thế nguồn dữ liệu, đổi mô hình từ LSTM sang Transformer hoặc thêm nguồn dữ liệu mới mà hầu như không phải sửa các module hiện có.
