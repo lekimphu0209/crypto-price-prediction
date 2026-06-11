@@ -79,6 +79,9 @@ CLEAN_ARCHITECTURE_DESIGN.md
 *summary*
 *Summary*
 
+# PDF files
+*.pdf
+
 # Text files (except requirements.txt)
 edit_dashboard.txt
 tom_tat_yeu_cau_giao_vien.txt
