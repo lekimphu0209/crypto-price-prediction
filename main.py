@@ -15,7 +15,7 @@ import seaborn as sns
 
 from src.data_collector import DataCollector
 from src.feature_engineering import FeatureEngineer
-from src.models import LinearRegressionModel, RNNModel, plot_predictions, plot_training_history
+from src.my_models import LinearRegressionModel, RNNModel, plot_predictions, plot_training_history
 
 # Set style for plots
 sns.set_style('whitegrid')
@@ -237,7 +237,7 @@ def main():
     lr_pred_btc_aligned = lr_pred_btc[30:]
     
     plt.figure(figsize=(15, 8))
-    plt.plot(y_btc_test_aligned.values, label='Actual', alpha=0.7)
+    plt.plot(y_btc_test_aligned, label='Actual', alpha=0.7)
     plt.plot(lr_pred_btc_aligned, label='Linear Regression', alpha=0.7)
     plt.plot(rnn_pred_btc, label='RNN', alpha=0.7)
     plt.title('Bitcoin Price Prediction - Actual vs Predicted')
@@ -257,7 +257,7 @@ def main():
     lr_pred_eth_aligned = lr_pred_eth[30:]
     
     plt.figure(figsize=(15, 8))
-    plt.plot(y_eth_test_aligned.values, label='Actual', alpha=0.7)
+    plt.plot(y_eth_test_aligned, label='Actual', alpha=0.7)
     plt.plot(lr_pred_eth_aligned, label='Linear Regression', alpha=0.7)
     plt.plot(rnn_pred_eth, label='RNN', alpha=0.7)
     plt.title('Ethereum Price Prediction - Actual vs Predicted')

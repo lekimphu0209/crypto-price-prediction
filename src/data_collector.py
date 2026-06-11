@@ -46,6 +46,10 @@ class DataCollector:
                 print(f"Cảnh báo: Không thể thu thập dữ liệu cho {symbol}")
                 return pd.DataFrame()
             
+            # Xử lý MultiIndex columns từ yfinance
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = df.columns.get_level_values(0)
+            
             # Đổi tên cột để nhất quán
             df.columns = [col.lower() for col in df.columns]
             df.reset_index(inplace=True)
@@ -72,12 +76,18 @@ class DataCollector:
             
             # Gold - sử dụng GLD ETF
             gold_df = yf.download("GLD", start=start_date, end=end_date, interval="1d")
+            # Xử lý MultiIndex columns
+            if isinstance(gold_df.columns, pd.MultiIndex):
+                gold_df.columns = gold_df.columns.get_level_values(0)
             gold_df.columns = [col.lower() for col in gold_df.columns]
             gold_df.reset_index(inplace=True)
             gold_df.rename(columns={'date': 'timestamp'}, inplace=True)
             
             # DXY - sử dụng UUP ETF (proxy cho DXY)
             dxy_df = yf.download("UUP", start=start_date, end=end_date, interval="1d")
+            # Xử lý MultiIndex columns
+            if isinstance(dxy_df.columns, pd.MultiIndex):
+                dxy_df.columns = dxy_df.columns.get_level_values(0)
             dxy_df.columns = [col.lower() for col in dxy_df.columns]
             dxy_df.reset_index(inplace=True)
             dxy_df.rename(columns={'date': 'timestamp'}, inplace=True)
@@ -97,29 +107,42 @@ class DataCollector:
             DataFrame đã merge
         """
         try:
+            merged = crypto_df.copy()
+            
             # Đảm bảo timestamp là datetime
-            crypto_df['timestamp'] = pd.to_datetime(crypto_df['timestamp'])
-            gold_df['timestamp'] = pd.to_datetime(gold_df['timestamp'])
-            dxy_df['timestamp'] = pd.to_datetime(dxy_df['timestamp'])
+            merged['timestamp'] = pd.to_datetime(merged['timestamp'])
             
-            # Merge crypto với gold
-            merged = pd.merge(crypto_df, gold_df[['timestamp', 'close']], 
-                            on='timestamp', how='left', suffixes=('', '_gold'))
-            merged.rename(columns={'close_gold': 'gold_close'}, inplace=True)
+            # Merge với gold nếu có dữ liệu
+            if not gold_df.empty and 'timestamp' in gold_df.columns and 'close' in gold_df.columns:
+                gold_df['timestamp'] = pd.to_datetime(gold_df['timestamp'])
+                merged = pd.merge(merged, gold_df[['timestamp', 'close']], 
+                                on='timestamp', how='left', suffixes=('', '_gold'))
+                merged.rename(columns={'close_gold': 'gold_close'}, inplace=True)
+                # Forward fill cho các giá trị thiếu
+                merged['gold_close'].fillna(method='ffill', inplace=True)
+            else:
+                # Tạo cột gold_close với giá trị NaN nếu không có dữ liệu
+                merged['gold_close'] = np.nan
             
-            # Merge với dxy
-            merged = pd.merge(merged, dxy_df[['timestamp', 'close']], 
-                            on='timestamp', how='left', suffixes=('', '_dxy'))
-            merged.rename(columns={'close_dxy': 'dxy_close'}, inplace=True)
-            
-            # Forward fill cho các giá trị thiếu
-            merged['gold_close'].fillna(method='ffill', inplace=True)
-            merged['dxy_close'].fillna(method='ffill', inplace=True)
+            # Merge với dxy nếu có dữ liệu
+            if not dxy_df.empty and 'timestamp' in dxy_df.columns and 'close' in dxy_df.columns:
+                dxy_df['timestamp'] = pd.to_datetime(dxy_df['timestamp'])
+                merged = pd.merge(merged, dxy_df[['timestamp', 'close']], 
+                                on='timestamp', how='left', suffixes=('', '_dxy'))
+                merged.rename(columns={'close_dxy': 'dxy_close'}, inplace=True)
+                # Forward fill cho các giá trị thiếu
+                merged['dxy_close'].fillna(method='ffill', inplace=True)
+            else:
+                # Tạo cột dxy_close với giá trị NaN nếu không có dữ liệu
+                merged['dxy_close'] = np.nan
             
             return merged
             
         except Exception as e:
             print(f"Lỗi khi merge dữ liệu: {e}")
+            # Trả về crypto_df với các cột macro rỗng
+            crypto_df['gold_close'] = np.nan
+            crypto_df['dxy_close'] = np.nan
             return crypto_df
     
     def save_data(self, df: pd.DataFrame, filename: str):

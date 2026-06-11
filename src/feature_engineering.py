@@ -173,10 +173,17 @@ class FeatureEngineer:
         df = df.dropna(subset=['target'])
         
         # Forward fill cho các features
-        df = df.fillna(method='ffill')
+        df = df.ffill()
         
         # Backward fill cho các giá trị còn thiếu
-        df = df.fillna(method='bfill')
+        df = df.bfill()
+        
+        # Xóa các cột macro nếu toàn bộ là NaN
+        macro_cols = ['gold_close', 'dxy_close', 'gold_return', 'gold_return_7', 
+                      'dxy_return', 'dxy_return_7', 'price_gold_ratio', 'price_dxy_ratio']
+        for col in macro_cols:
+            if col in df.columns and df[col].isna().all():
+                df = df.drop(columns=[col])
         
         return df
     
@@ -194,7 +201,11 @@ class FeatureEngineer:
         if exclude_cols is None:
             exclude_cols = ['timestamp', 'target', 'target_direction']
         
-        feature_cols = [col for col in df.columns if col not in exclude_cols]
+        # Chỉ lấy các cột numeric
+        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+        
+        # Loại bỏ các cột trong exclude_cols
+        feature_cols = [col for col in numeric_cols if col not in exclude_cols]
         
         return feature_cols
 
