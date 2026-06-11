@@ -29,3 +29,9 @@ notebook
 # Additional Utilities
 tqdm
 python-dotenv
+
+# Realtime System
+websockets
+fastapi
+uvicorn
+pydantic
