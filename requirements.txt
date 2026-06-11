@@ -38,3 +38,13 @@ pydantic
 
 # Clean Architecture
 dependency-injector
+
+# Advanced Models
+xgboost
+
+# Dashboard
+streamlit
+plotly
+
+# Additional ML
+lightgbm

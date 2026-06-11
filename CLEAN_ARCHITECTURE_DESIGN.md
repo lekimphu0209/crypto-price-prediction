@@ -1,8 +1,32 @@
-# Clean Architecture Design - Crypto Prediction System
+# Clean Architecture Design - Quantitative Trading Platform
 
 ## Tổng Quan
 
-Thiết kế hệ thống dự đoán giá crypto theo Clean Architecture, SOLID principles, dễ mở rộng và ít phụ thuộc.
+Thiết kế hệ thống Quantitative Trading Platform thu nhỏ cho dự đoán giá crypto theo Clean Architecture, SOLID principles, dễ mở rộng và ít phụ thuộc.
+
+## Mục Tiêu Hệ Thống
+
+Dự đoán giá BTC/ETH trong tương lai với đa nguồn dữ liệu và đa mô hình.
+
+**Inputs:**
+- Historical OHLCV
+- Technical Indicators
+- Gold Price
+- DXY (US Dollar Index)
+- News Sentiment
+- X.com/Twitter Sentiment
+
+**Outputs:**
+- Giá dự đoán
+- Xu hướng tăng/giảm
+- Độ tin cậy
+
+**Models:**
+- Linear Regression
+- XGBoost
+- LSTM
+- BiLSTM
+- Transformer
 
 ## Kiến Trúc Clean Architecture
 
@@ -59,34 +83,41 @@ Thiết kế hệ thống dự đoán giá crypto theo Clean Architecture, SOLID
 - Cả hai đều phụ thuộc vào abstractions (interfaces)
 - Dependency Injection container
 
-## Cấu Trúc Thư Mục
+## Cấu Trúc Thư Mục (Mở Rộng)
 
 ```
 DAMH/
 ├── src/
-│   ├── domain/                      # Domain Layer
+│   ├── domain/                      # Domain Layer (Không phụ thuộc external libs)
 │   │   ├── __init__.py
 │   │   ├── entities/                # Business entities
 │   │   │   ├── __init__.py
 │   │   │   ├── ohlcv.py            # OHLCV entity
 │   │   │   ├── prediction.py       # Prediction entity
-│   │   │   └── model_metrics.py    # Model metrics entity
-│   │   ├── value_objects/          # Value objects
+│   │   │   ├── model_metrics.py    # Model metrics entity
+│   │   │   ├── sentiment.py        # Sentiment entity
+│   │   │   ├── feature_vector.py   # Feature vector entity
+│   │   │   └── trade_signal.py     # Trade signal entity
+│   │   ├── value_objects/          # Value objects (immutable)
 │   │   │   ├── __init__.py
 │   │   │   ├── symbol.py           # Symbol value object
 │   │   │   ├── interval.py         # Interval value object
-│   │   │   └── timestamp.py        # Timestamp value object
+│   │   │   ├── direction.py        # Direction (UP/DOWN)
+│   │   │   └── confidence.py       # Confidence level
 │   │   ├── services/               # Domain services
 │   │   │   ├── __init__.py
-│   │   │   ├── feature_calculator.py # Feature calculation logic
-│   │   │   └── model_evaluator.py    # Model evaluation logic
+│   │   │   ├── feature_service.py  # Feature calculation logic
+│   │   │   ├── model_evaluator.py  # Model evaluation logic
+│   │   │   └── backtest_service.py # Backtesting logic
 │   │   ├── interfaces/             # Domain interfaces (abstractions)
 │   │   │   ├── __init__.py
-│   │   │   ├── data_reader.py      # IDataReader interface
-│   │   │   ├── data_writer.py      # IDataWriter interface
-│   │   │   ├── model.py            # IModel interface
+│   │   │   ├── data_provider.py    # IDataProvider interface
+│   │   │   ├── feature_generator.py # IFeatureGenerator interface
+│   │   │   ├── sentiment_analyzer.py # ISentimentAnalyzer interface
 │   │   │   ├── predictor.py        # IPredictor interface
-│   │   │   └── data_source.py      # IDataSource interface
+│   │   │   ├── ensemble.py         # IEnsemble interface
+│   │   │   ├── backtester.py      # IBacktester interface
+│   │   │   └── model_repository.py # IModelRepository interface
 │   │   └── repositories/           # Repository interfaces
 │   │       ├── __init__.py
 │   │       ├── data_repository.py  # IDataRepository interface
@@ -94,47 +125,73 @@ DAMH/
 │   │
 │   ├── application/                # Application Layer
 │   │   ├── __init__.py
+│   │   ├── pipelines/              # Data pipelines
+│   │   │   ├── __init__.py
+│   │   │   ├── feature_pipeline.py # Feature engineering pipeline
+│   │   │   ├── missing_value_handler.py
+│   │   │   ├── outlier_handler.py
+│   │   │   ├── normalizer.py
+│   │   │   └── technical_feature_generator.py
 │   │   ├── use_cases/              # Use cases
 │   │   │   ├── __init__.py
 │   │   │   ├── collect_data.py     # CollectDataUseCase
 │   │   │   ├── train_model.py      # TrainModelUseCase
 │   │   │   ├── predict.py          # PredictUseCase
-│   │   │   └── evaluate_model.py   # EvaluateModelUseCase
+│   │   │   ├── evaluate_model.py   # EvaluateModelUseCase
+│   │   │   ├── backtest.py         # BacktestUseCase
+│   │   │   └── ensemble_predict.py # EnsemblePredictUseCase
 │   │   ├── dtos/                   # Data Transfer Objects
 │   │   │   ├── __init__.py
 │   │   │   ├── prediction_dto.py   # Prediction DTO
 │   │   │   ├── model_dto.py        # Model DTO
-│   │   │   └── data_dto.py         # Data DTO
-│   │   ├── services/               # Application services
-│   │   │   ├── __init__.py
-│   │   │   ├── prediction_service.py # Prediction orchestration
-│   │   │   └── model_service.py      # Model management
-│   │   └── ports/                  # Ports (interfaces for infrastructure)
+│   │   │   ├── backtest_dto.py     # Backtest DTO
+│   │   │   └── trade_dto.py        # Trade DTO
+│   │   └── services/               # Application services
 │   │       ├── __init__.py
-│   │       └── output_ports.py     # IOutputPort interfaces
+│   │       ├── prediction_service.py # Prediction orchestration
+│   │       ├── model_service.py      # Model management
+│   │       └── ensemble_service.py   # Ensemble orchestration
 │   │
 │   ├── infrastructure/             # Infrastructure Layer
 │   │   ├── __init__.py
-│   │   ├── data_sources/           # Data source implementations
+│   │   ├── data_providers/         # Data provider implementations
 │   │   │   ├── __init__.py
-│   │   │   ├── binance_source.py   # Binance data source
-│   │   │   ├── yfinance_source.py  # Yahoo Finance data source
-│   │   │   └── sentiment_source.py # Sentiment data source
+│   │   │   ├── binance_provider.py # Binance data provider
+│   │   │   ├── yfinance_provider.py # Yahoo Finance data provider
+│   │   │   ├── coingecko_provider.py # CoinGecko data provider
+│   │   │   └── sentiment_provider.py # Sentiment data provider
+│   │   ├── feature_generators/     # Feature generator implementations
+│   │   │   ├── __init__.py
+│   │   │   ├── technical_generator.py # Technical indicators
+│   │   │   ├── sentiment_generator.py # Sentiment features
+│   │   │   └── macro_generator.py     # Macro features
 │   │   ├── repositories/           # Repository implementations
 │   │   │   ├── __init__.py
 │   │   │   ├── csv_repository.py   # CSV data repository
-│   │   │   └── model_repository.py # Model file repository
+│   │   │   ├── model_repository.py # Model file repository
+│   │   │   └── trade_repository.py # Trade history repository
 │   │   ├── models/                 # ML model implementations
 │   │   │   ├── __init__.py
 │   │   │   ├── base_model.py       # Base model class
 │   │   │   ├── linear_regression.py # Linear Regression
+│   │   │   ├── xgboost_model.py    # XGBoost
 │   │   │   ├── rnn_model.py        # RNN
 │   │   │   ├── lstm_model.py       # LSTM
+│   │   │   ├── bilstm_model.py     # BiLSTM
 │   │   │   └── transformer_model.py # Transformer
+│   │   ├── ensemble/               # Ensemble implementations
+│   │   │   ├── __init__.py
+│   │   │   ├── weighted_ensemble.py # Weighted average
+│   │   │   └── stacking_ensemble.py  # Stacking ensemble
+│   │   ├── backtesting/            # Backtesting implementations
+│   │   │   ├── __init__.py
+│   │   │   ├── simple_backtester.py # Simple backtesting
+│   │   │   └── advanced_backtester.py # Advanced backtesting
 │   │   ├── external/               # External API clients
 │   │   │   ├── __init__.py
 │   │   │   ├── binance_client.py   # Binance API client
-│   │   │   └── twitter_client.py   # Twitter API client
+│   │   │   ├── twitter_client.py   # Twitter API client
+│   │   │   └── news_client.py      # News API client
 │   │   └── persistence/            # Persistence
 │   │       ├── __init__.py
 │   │       ├── file_storage.py     # File storage
@@ -142,26 +199,39 @@ DAMH/
 │   │
 │   ├── presentation/               # Presentation Layer
 │   │   ├── __init__.py
-│   │   ├── api/                    # REST API
+│   │   ├── api/                    # REST API (FastAPI)
 │   │   │   ├── __init__.py
 │   │   │   ├── routes/             # API routes
 │   │   │   │   ├── __init__.py
 │   │   │   │   ├── prediction.py   # Prediction endpoints
 │   │   │   │   ├── model.py        # Model endpoints
-│   │   │   │   └── data.py         # Data endpoints
+│   │   │   │   ├── data.py         # Data endpoints
+│   │   │   │   ├── backtest.py     # Backtest endpoints
+│   │   │   │   └── ensemble.py     # Ensemble endpoints
 │   │   │   ├── schemas/            # Pydantic schemas
 │   │   │   │   ├── __init__.py
-│   │   │   │   └── prediction.py   # Prediction schemas
+│   │   │   │   ├── prediction.py   # Prediction schemas
+│   │   │   │   └── model.py        # Model schemas
 │   │   │   └── app.py              # FastAPI app
 │   │   ├── cli/                    # Command Line Interface
 │   │   │   ├── __init__.py
 │   │   │   └── commands.py         # CLI commands
-│   │   ├── websocket/              # WebSocket handlers
+│   │   ├── dashboard/              # Dashboard (Streamlit)
 │   │   │   ├── __init__.py
-│   │   │   └── handler.py          # WebSocket handler
-│   │   └── dashboard/              # Dashboard
+│   │   │   ├── app.py              # Streamlit app
+│   │   │   ├── pages/              # Dashboard pages
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── home.py         # Home page
+│   │   │   │   ├── prediction.py   # Prediction page
+│   │   │   │   ├── backtest.py     # Backtest page
+│   │   │   │   └── models.py       # Models comparison page
+│   │   │   └── components/         # Reusable components
+│   │   │       ├── __init__.py
+│   │   │       ├── charts.py       # Chart components
+│   │   │       └── tables.py       # Table components
+│   │   └── websocket/              # WebSocket handlers
 │   │       ├── __init__.py
-│   │       └── server.py           # Dashboard server
+│   │       └── handler.py          # WebSocket handler
 │   │
 │   └── core/                       # Core (cross-cutting concerns)
 │       ├── __init__.py
@@ -172,17 +242,269 @@ DAMH/
 │
 ├── tests/                          # Tests
 │   ├── unit/                       # Unit tests
+│   │   ├── domain/                 # Domain layer tests
+│   │   ├── application/            # Application layer tests
+│   │   └── infrastructure/         # Infrastructure layer tests
 │   ├── integration/                # Integration tests
 │   └── e2e/                        # End-to-end tests
 │
 ├── config/                         # Configuration files
 │   ├── settings.yaml               # Application settings
-│   └── logging.yaml                # Logging configuration
+│   ├── logging.yaml                # Logging configuration
+│   └── models.yaml                # Model configurations
+│
+├── notebooks/                      # Jupyter notebooks for analysis
+│   ├── data_exploration.ipynb
+│   ├── feature_engineering.ipynb
+│   └── model_analysis.ipynb
 │
 ├── main.py                         # Entry point
 ├── requirements.txt                # Dependencies
 └── README.md                       # Documentation
 ```
+
+## Data Collection Layer
+
+### Historical Data
+**Symbols:** BTC, ETH
+
+**Fields:**
+- Open, High, Low, Close, Volume
+
+**Sources:**
+- Binance API
+- CoinGecko
+- Yahoo Finance
+
+### Macro Data
+**Gold Price**
+- GLD ETF (via Yahoo Finance)
+
+**DXY (US Dollar Index)**
+- UUP ETF (via Yahoo Finance)
+
+**Interest Rate**
+- Federal Reserve data
+
+**CPI (Consumer Price Index)**
+- Bureau of Labor Statistics
+
+### Sentiment Data
+**Twitter/X.com**
+- Real-time tweets
+- Sentiment analysis using LLM
+
+**Reddit**
+- r/cryptocurrency, r/Bitcoin
+- Sentiment scores
+
+**Crypto News**
+- Major crypto news sites
+- News impact scoring
+
+## Feature Engineering Layer
+
+Đây là phần quyết định độ chính xác của dự đoán.
+
+### Feature Nhóm 1: OHLCV
+- close, open, high, low, volume
+- price changes, returns
+
+### Feature Nhóm 2: Technical Indicators
+- RSI (Relative Strength Index)
+- MACD (Moving Average Convergence Divergence)
+- ATR (Average True Range)
+- MA20, MA50 (Moving Averages)
+- EMA20, EMA50 (Exponential Moving Averages)
+- Bollinger Bands
+
+### Feature Nhóm 3: Sentiment
+- Average Sentiment Score
+- Positive Ratio
+- Negative Ratio
+- News Impact Score
+
+### Feature Nhóm 4: Macro
+- Gold Return
+- DXY Return
+- Interest Rate
+- CPI
+
+### Kết quả Feature Vector
+```
+[
+    close, volume,
+    RSI, MACD, ATR,
+    MA20, MA50,
+    gold_return, dxy_return,
+    news_sentiment, twitter_sentiment
+]
+```
+
+## Data Pipeline
+
+Tách riêng từng bước để dễ mở rộng.
+
+### FeaturePipeline Components
+```
+FeaturePipeline
+├── MissingValueHandler
+├── OutlierHandler
+├── TechnicalFeatureGenerator
+├── SentimentFeatureGenerator
+├── MacroFeatureGenerator
+└── Normalizer
+```
+
+### Ví dụ Pipeline
+```python
+pipeline = [
+    MissingValueHandler(),
+    TechnicalFeatureGenerator(),
+    SentimentFeatureGenerator(),
+    Normalizer()
+]
+```
+
+**Lợi ích:** Sau này thêm `WhaleTransactionFeatureGenerator()` không cần sửa code cũ (Open/Closed Principle).
+
+## Model Layer
+
+### Interface Chung
+```python
+class IPredictor:
+    train()
+    predict()
+    save()
+    load()
+```
+
+### Model Implementations
+- LinearRegressionPredictor
+- XGBoostPredictor
+- LSTMPredictor
+- BiLSTMPredictor
+- TransformerPredictor
+
+## Deep Learning Architectures
+
+### LSTM Architecture
+```
+Input: 30 ngày gần nhất
+├── Day1, Day2, ..., Day30
+├── LSTM Layer (128 units)
+├── Dropout (0.2)
+├── LSTM Layer (64 units)
+├── Dropout (0.2)
+├── Dense (32)
+└── Output: BTC ngày 31
+```
+
+### BiLSTM Architecture
+```
+Input Layer
+├── BiLSTM Layer (128 units)
+├── Dropout (0.3)
+├── BiLSTM Layer (64 units)
+├── Dropout (0.3)
+├── Dense (32)
+└── Output: Prediction
+```
+
+### Transformer Architecture
+```
+Input
+├── Embedding Layer
+├── Positional Encoding
+├── Multi-Head Attention (4 heads)
+├── Feed Forward Network
+├── Layer Normalization
+├── Dense (64)
+└── Output: Prediction
+```
+
+## Ensemble Layer
+
+### Weighted Average Ensemble
+```
+LSTM (weight: 0.3)
+├── BiLSTM (weight: 0.3)
+├── Transformer (weight: 0.25)
+└── XGBoost (weight: 0.15)
+    ↓
+Weighted Average
+    ↓
+Final Prediction
+```
+
+### Stacking Ensemble (Meta Learner)
+```
+LSTM Prediction
+├── BiLSTM Prediction
+├── Transformer Prediction
+└── XGBoost Prediction
+    ↓
+Meta Learner (Linear Regression)
+    ↓
+Final Prediction
+```
+
+## Evaluation Layer
+
+### Regression Metrics
+- MAE (Mean Absolute Error)
+- RMSE (Root Mean Squared Error)
+- MAPE (Mean Absolute Percentage Error)
+- R² (R-squared)
+
+### Direction Accuracy (Quan trọng trong trading)
+```
+Prediction ↑, Reality ↑ → Correct
+Prediction ↓, Reality ↓ → Correct
+Prediction ↑, Reality ↓ → Wrong
+Prediction ↓, Reality ↑ → Wrong
+```
+
+**Metrics:**
+- Accuracy
+- Precision
+- Recall
+- F1-Score
+
+## Backtesting Layer
+
+Mô phỏng giao dịch để đánh giá khả năng sinh lợi.
+
+### Trading Strategy
+```
+Nếu prediction > 2% → BUY
+Nếu prediction < -2% → SELL
+```
+
+### Backtesting Metrics
+- Total Profit
+- PnL (Profit and Loss)
+- Sharpe Ratio
+- Max Drawdown
+- Win Rate
+- Average Win/Loss Ratio
+
+**Lợi ích:** Phần này giúp báo cáo được đánh giá cao vì không chỉ dự đoán mà còn kiểm tra khả năng sinh lợi thực tế.
+
+## Dashboard
+
+### Tech Stack
+- **Backend:** FastAPI
+- **Frontend:** Streamlit
+
+### Hiển thị
+- Current BTC/ETH Price
+- Prediction Tomorrow
+- Prediction 7 Days
+- Sentiment Trend
+- Latest Crypto News
+- Model Comparison
+- Backtesting Results
 
 ## Chi Tách Các Layer
 
