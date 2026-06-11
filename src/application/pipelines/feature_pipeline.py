@@ -2,7 +2,7 @@
 Feature Pipeline - Pipeline for feature engineering
 """
 from abc import ABC, abstractmethod
-from typing import List, Any
+from typing import List, Any, Optional
 import pandas as pd
 import numpy as np
 
@@ -215,11 +215,29 @@ class FeaturePipeline:
         return [step.get_name() for step in self.steps]
 
 
-def create_default_pipeline() -> FeaturePipeline:
-    """Create default feature pipeline"""
-    return FeaturePipeline([
+def create_default_pipeline(macro_data: Optional[dict] = None) -> FeaturePipeline:
+    """Create default feature pipeline
+    
+    Args:
+        macro_data: Dictionary with 'gold' and 'dxy' DataFrames
+    
+    Returns:
+        FeaturePipeline instance
+    """
+    steps = [
         MissingValueHandler(strategy="ffill"),
         OutlierHandler(multiplier=1.5),
         TechnicalFeatureGenerator(),
         Normalizer(method="standard")
-    ])
+    ]
+    
+    # Add macro feature generator if data available
+    if macro_data:
+        from .macro_feature_generator import MacroFeatureGenerator
+        macro_generator = MacroFeatureGenerator(
+            gold_data=macro_data.get('gold'),
+            dxy_data=macro_data.get('dxy')
+        )
+        steps.insert(3, macro_generator)  # Insert before normalizer
+    
+    return FeaturePipeline(steps)

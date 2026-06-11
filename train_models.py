@@ -10,6 +10,8 @@ from src.infrastructure.data_providers.yfinance_provider import YahooFinanceProv
 from src.infrastructure.repositories.csv_repository import CSVDataRepository
 from src.infrastructure.models.linear_regression import LinearRegressionModel
 from src.infrastructure.models.xgboost_model import XGBoostModel
+from src.infrastructure.models.lstm_model import LSTMModel
+from src.infrastructure.models.bilstm_model import BiLSTMModel
 from src.application.use_cases.collect_data import CollectDataUseCase
 from src.application.use_cases.train_model import TrainModelUseCase
 
@@ -39,7 +41,14 @@ def main():
         data_repository=data_repository
     )
     
+    # Collect macro data
+    print("\n3. Collecting macro data...")
+    macro_data = collect_use_case.collect_macro_data(['GLD', 'UUP'], period="2y")
+    print(f"   Gold data points: {len(macro_data.get('GLD', []))}")
+    print(f"   DXY data points: {len(macro_data.get('UUP', []))}")
+    
     # Collect BTC data
+    print("\n4. Collecting crypto data...")
     symbol = "BTCUSDT"
     interval = "1d"
     
@@ -61,7 +70,7 @@ def main():
                 interval="1d",
                 source="yahoo",
                 limit=1000,
-                days_back=730
+             days_back=730
             )
             print(f"   Collected {len(data)} candles for BTC-USD")
             symbol = "BTC-USD"
@@ -70,20 +79,28 @@ def main():
             return
     
     # Initialize models
-    print("\n3. Initializing models...")
+    print("\n5. Initializing models...")
     models = [
         LinearRegressionModel(),
-        XGBoostModel(n_estimators=100, max_depth=6, learning_rate=0.1)
+        XGBoostModel(n_estimators=100, max_depth=6, learning_rate=0.1),
+        LSTMModel(sequence_length=30, lstm_units=64, dropout_rate=0.2),
+        BiLSTMModel(sequence_length=30, lstm_units=64, dropout_rate=0.2)
     ]
     
     for model in models:
         print(f"   - {model.name}")
     
     # Train models
-    print("\n4. Training models...")
+    print("\n6. Training models...")
+    
+    # Create pipeline with macro data
+    from src.application.pipelines.feature_pipeline import create_default_pipeline
+    feature_pipeline = create_default_pipeline(macro_data=macro_data)
+    
     train_use_case = TrainModelUseCase(
         models=models,
-        data_repository=data_repository
+        data_repository=data_repository,
+        feature_pipeline=feature_pipeline
     )
     
     results = train_use_case.execute(
@@ -95,7 +112,7 @@ def main():
     )
     
     # Print results
-    print("\n5. Training Results:")
+    print("\n7. Training Results:")
     print("-" * 80)
     for model_name, result in results.items():
         if result['status'] == 'success':
