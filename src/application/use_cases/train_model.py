@@ -9,6 +9,7 @@ import os
 
 from src.domain.interfaces.model import IModel
 from src.infrastructure.repositories.csv_repository import CSVDataRepository
+from src.infrastructure.ensemble.weighted_ensemble import WeightedEnsemble
 from src.application.pipelines.feature_pipeline import FeaturePipeline, create_default_pipeline
 from src.domain.value_objects.symbol import Symbol
 from src.domain.value_objects.interval import Interval
@@ -157,4 +158,85 @@ class TrainModelUseCase:
         Returns:
             Training results
         """
+    
+    def execute_with_ensemble(
+        self,
+        symbol: str,
+        interval: str,
+        train_size: float = 0.8,
+        save_models: bool = True,
+        models_dir: str = "models",
+        ensemble_weights: List[float] = None
+    ) -> Dict[str, Dict]:
+        """
+        Execute training with ensemble
+        
+        Args:
+            symbol: Trading symbol
+            interval: Time interval
+            train_size: Training set ratio
+            save_models: Whether to save trained models
+            models_dir: Directory to save models
+            ensemble_weights: Weights for ensemble (default: equal weights)
+        
+        Returns:
+            Dictionary of training results including ensemble
+        """
+        # First train individual models
+        individual_results = self.execute(symbol, interval, train_size, save_models, models_dir)
+        
+        # Create ensemble with trained models
+        trained_models = [model for model in self.models if model.is_trained]
+        
+        if len(trained_models) > 1:
+            ensemble = WeightedEnsemble(trained_models, ensemble_weights)
+            
+            # Evaluate ensemble
+            # Load data again for ensemble evaluation
+            symbol_vo = Symbol(symbol)
+            interval_vo = Interval(interval)
+            ohlcv_data = self.data_repository.get_latest_data(symbol_vo, interval_vo, limit=2000)
+            
+            df = pd.DataFrame([{
+                'timestamp': o.timestamp,
+                'open': o.open,
+                'high': o.high,
+                'low': o.low,
+                'close': o.close,
+                'volume': o.volume
+            } for o in ohlcv_data])
+            
+            df_processed = self.feature_pipeline.execute(df)
+            df_processed = df_processed.dropna()
+            
+            df_processed['target'] = df_processed['close'].shift(-1)
+            df_processed = df_processed.dropna()
+            
+            feature_cols = df_processed.select_dtypes(include=[np.number]).columns.tolist()
+            feature_cols = [col for col in feature_cols if col != 'target']
+            
+            X = df_processed[feature_cols].values
+            y = df_processed['target'].values
+            
+            split_idx = int(len(X) * train_size)
+            X_test, y_test = X[split_idx:], y[split_idx:]
+            
+            # Evaluate ensemble
+            from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+            y_pred_ensemble = ensemble.predict(X_test)
+            
+            ensemble_metrics = {
+                'mae': float(mean_absolute_error(y_test, y_pred_ensemble)),
+                'rmse': float(np.sqrt(mean_squared_error(y_test, y_pred_ensemble))),
+                'r2': float(r2_score(y_test, y_pred_ensemble))
+            }
+            
+            individual_results['Ensemble'] = {
+                'metrics': ensemble_metrics,
+                'status': 'success'
+            }
+            
+            print(f"\nEnsemble - MAE: {ensemble_metrics['mae']:.2f}, RMSE: {ensemble_metrics['rmse']:.2f}, R²: {ensemble_metrics['r2']:.4f}")
+        
+        return individual_results
         return self.execute(symbol, interval, train_size, save_model)[model.name]

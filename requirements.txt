@@ -51,3 +51,5 @@ lightgbm
 
 # Data Providers
 ccxt
+tweepy
+requests

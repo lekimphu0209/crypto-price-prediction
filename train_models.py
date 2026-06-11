@@ -103,12 +103,13 @@ def main():
         feature_pipeline=feature_pipeline
     )
     
-    results = train_use_case.execute(
+    results = train_use_case.execute_with_ensemble(
         symbol=symbol,
         interval=interval,
         train_size=0.8,
         save_models=True,
-        models_dir="models"
+        models_dir="models",
+        ensemble_weights=[0.3, 0.3, 0.2, 0.2]  # LR, XGB, LSTM, BiLSTM
     )
     
     # Print results
@@ -125,7 +126,7 @@ def main():
             print(f"\n{model_name}: FAILED")
             print(f"   Error: {result.get('error', 'Unknown error')}")
     
-    print("\n" + "=" * 80)
+    print("Training complete with Ensemble!")
     print("Training complete!")
     print("=" * 80)
     print("\nNext steps:")
