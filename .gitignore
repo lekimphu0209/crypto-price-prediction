@@ -70,7 +70,7 @@ htmlcov/
 
 # Documentation
 docs/_build/
-README.md
+# README.md
 IMPLEMENTATION_SUMMARY.md
 QUANT_PLATFORM_SUMMARY.md
 CLEAN_ARCHITECTURE_DESIGN.md
