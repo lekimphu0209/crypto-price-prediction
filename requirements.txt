@@ -53,3 +53,4 @@ lightgbm
 ccxt
 tweepy
 requests
+openai

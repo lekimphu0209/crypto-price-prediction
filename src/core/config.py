@@ -22,6 +22,18 @@ class Config:
     binance_api_key: Optional[str] = None
     binance_api_secret: Optional[str] = None
     
+    # NewsAPI settings
+    newsapi_key: Optional[str] = None
+    
+    # Twitter API settings
+    twitter_api_key: Optional[str] = None
+    twitter_api_secret: Optional[str] = None
+    twitter_access_token: Optional[str] = None
+    twitter_access_token_secret: Optional[str] = None
+    
+    # OpenAI API settings
+    openai_api_key: Optional[str] = None
+    
     # Model settings
     default_sequence_length: int = 30
     train_test_split: float = 0.8
@@ -36,6 +48,12 @@ class Config:
             api_port=int(os.getenv('API_PORT', '8000')),
             binance_api_key=os.getenv('BINANCE_API_KEY'),
             binance_api_secret=os.getenv('BINANCE_API_SECRET'),
+            newsapi_key=os.getenv('NEWSAPI_KEY', 'e009882997db4c53bc86a3736a349c29'),
+            twitter_api_key=os.getenv('TWITTER_API_KEY'),
+            twitter_api_secret=os.getenv('TWITTER_API_SECRET'),
+            twitter_access_token=os.getenv('TWITTER_ACCESS_TOKEN'),
+            twitter_access_token_secret=os.getenv('TWITTER_ACCESS_TOKEN_SECRET'),
+            openai_api_key=os.getenv('OPENAI_API_KEY'),
             default_sequence_length=int(os.getenv('SEQUENCE_LENGTH', '30')),
             train_test_split=float(os.getenv('TRAIN_TEST_SPLIT', '0.8'))
         )

@@ -16,16 +16,21 @@ class NewsClient:
         Initialize news client
         
         Args:
-            api_key: Optional API key for news service
+            api_key: Optional API key for news service (defaults to config)
         """
+        if api_key is None:
+            from src.core.config import config
+            api_key = config.newsapi_key
+        
         self.api_key = api_key
-        self.base_url = "https://newsapi.org/v2"  # Example using NewsAPI
+        self.base_url = "https://newsapi.org/v2"
     
     def fetch_crypto_news(
         self,
         symbol: str,
         days_back: int = 7,
-        limit: int = 100
+        limit: int = 100,
+        use_mock: bool = False
     ) -> List[Dict]:
         """
         Fetch crypto news articles
@@ -34,12 +39,14 @@ class NewsClient:
             symbol: Trading symbol
             days_back: Number of days to look back
             limit: Maximum number of articles
+            use_mock: Force use mock data
         
         Returns:
             List of article dictionaries
         """
-        if not self.api_key:
+        if not self.api_key or use_mock:
             # Return mock data if no API key
+            print("Using mock news data")
             return self._generate_mock_news(symbol, limit)
         
         try:
