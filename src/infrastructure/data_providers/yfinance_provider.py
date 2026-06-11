@@ -4,7 +4,7 @@ Yahoo Finance Data Provider Implementation
 import pandas as pd
 import numpy as np
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 import yfinance as yf
 
 from src.domain.interfaces.data_source import IDataSource

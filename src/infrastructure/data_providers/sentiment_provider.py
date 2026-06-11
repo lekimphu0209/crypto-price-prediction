@@ -54,15 +54,31 @@ class SentimentProvider:
             List of Sentiment entities
         """
         # Use real Twitter client if available
-        if source == SentimentSource.TWITTER and self.twitter_client:
-            query = f"${symbol} OR #{symbol}"
-            tweets = self.twitter_client.fetch_tweets(query, max_results=limit)
-          Use real News client if available
+        if source == SentimentSource.TWITTER:
+            # Try Nitter scraper first (free)
+            if self.nitter_scraper:
+                try:
+                    query = f"${symbol} OR #{symbol}"
+                    tweets = self.nitter_scraper.fetch_tweets(query, max_results=limit)
+                    
+                    # Use Hugging Face analyzer if available, otherwise keyword-based
+                    if self.hf_analyzer:
+                        return self.hf_analyzer.analyze_twitter_sentiment(tweets, symbol)
+                    else:
+                        return self.nitter_scraper.analyze_sentiment_from_tweets(tweets, symbol)
+                except Exception as e:
+                    print(f"Nitter scraper failed: {e}")
+            
+            # Fall back to Twitter API client
+            if self.twitter_client:
+                query = f"${symbol} OR #{symbol}"
+                tweets = self.twitter_client.fetch_tweets(query, max_results=limit)
+                return self.twitter_client.analyze_sentiment_from_tweets(tweets, symbol)
+        
+        # Use real News client if available
         if source == SentimentSource.NEWS and self.news_client:
             news = self.news_client.fetch_crypto_news(symbol, days_back=7, limit=limit)
             return self.news_client.analyze_sentiment_from_news(news, symbol)
-        
-        #   return self.twitter_client.analyze_sentiment_from_tweets(tweets, symbol)
         
         # Otherwise use simplified version for demo
         return self._generate_mock_sentiment(symbol, source, limit)

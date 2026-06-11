@@ -70,3 +70,17 @@ htmlcov/
 
 # Documentation
 docs/_build/
+README.md
+IMPLEMENTATION_SUMMARY.md
+QUANT_PLATFORM_SUMMARY.md
+CLEAN_ARCHITECTURE_DESIGN.md
+*plan*
+*Plan*
+*summary*
+*Summary*
+
+# Text files (except requirements.txt)
+edit_dashboard.txt
+tom_tat_yeu_cau_giao_vien.txt
+*.txt
+!requirements.txt

@@ -46,9 +46,16 @@ class WeightedEnsemble:
         if not predictions:
             raise RuntimeError("No trained models available for ensemble")
         
+        # Handle different prediction lengths (e.g., sequence models vs non-sequence)
+        # Find minimum length and align predictions
+        min_length = min(len(pred) for pred in predictions)
+        
+        # Truncate all predictions to minimum length
+        aligned_predictions = [pred[:min_length] for pred in predictions]
+        
         # Weighted average
-        ensemble_pred = np.zeros_like(predictions[0])
-        for pred, weight in zip(predictions, self.weights):
+        ensemble_pred = np.zeros(min_length)
+        for pred, weight in zip(aligned_predictions, self.weights):
             ensemble_pred += weight * pred
         
         return ensemble_pred
@@ -73,9 +80,13 @@ class WeightedEnsemble:
         if not predictions:
             raise RuntimeError("No trained models available for ensemble")
         
+        # Handle different prediction lengths
+        min_length = min(len(pred) for pred in predictions)
+        aligned_predictions = [pred[:min_length] for pred in predictions]
+        
         # Weighted average
-        ensemble_pred = np.zeros_like(predictions[0])
-        for pred, weight in zip(predictions, self.weights):
+        ensemble_pred = np.zeros(min_length)
+        for pred, weight in zip(aligned_predictions, self.weights):
             ensemble_pred += weight * pred
         
         # Calculate confidence based on model agreement

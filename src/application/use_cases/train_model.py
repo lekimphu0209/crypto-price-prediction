@@ -225,10 +225,13 @@ class TrainModelUseCase:
             from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
             y_pred_ensemble = ensemble.predict(X_test)
             
+            # Align y_test with ensemble predictions (may be shorter due to sequence models)
+            y_test_aligned = y_test[:len(y_pred_ensemble)]
+            
             ensemble_metrics = {
-                'mae': float(mean_absolute_error(y_test, y_pred_ensemble)),
-                'rmse': float(np.sqrt(mean_squared_error(y_test, y_pred_ensemble))),
-                'r2': float(r2_score(y_test, y_pred_ensemble))
+                'mae': float(mean_absolute_error(y_test_aligned, y_pred_ensemble)),
+                'rmse': float(np.sqrt(mean_squared_error(y_test_aligned, y_pred_ensemble))),
+                'r2': float(r2_score(y_test_aligned, y_pred_ensemble))
             }
             
             individual_results['Ensemble'] = {
