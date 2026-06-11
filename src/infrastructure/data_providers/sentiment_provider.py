@@ -14,16 +14,27 @@ from src.domain.entities.sentiment import Sentiment, SentimentSource
 class SentimentProvider:
     """Sentiment data provider"""
     
-    def __init__(self, twitter_client=None, news_client=None, llm_analyzer=None):
+    def __init__(
+        self,
+        twitter_client=None,
+        news_client=None,
+        llm_analyzer=None,
+        hf_analyzer=None,
+        nitter_scraper=None
+    ):
         """
         Args:
             twitter_client: Optional TwitterClient for real data
             news_client: Optional NewsClient for real data
             llm_analyzer: Optional LLMSentimentAnalyzer for LLM-based analysis
+            hf_analyzer: Optional HuggingFaceSentimentAnalyzer for free LLM analysis
+            nitter_scraper: Optional NitterScraper for free Twitter data
         """
         self.twitter_client = twitter_client
         self.news_client = news_client
         self.llm_analyzer = llm_analyzer
+        self.hf_analyzer = hf_analyzer
+        self.nitter_scraper = nitter_scraper
     
     def fetch_sentiment(
         self,
