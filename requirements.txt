@@ -1,0 +1,31 @@
+# Bitcoin Price Prediction Project - Dependencies
+# Python 3.8+ recommended
+
+# Data Collection
+yfinance
+python-binance
+requests
+
+# Data Manipulation
+pandas
+numpy
+
+# Technical Analysis
+ta
+
+# Machine Learning
+scikit-learn
+tensorflow
+keras
+
+# Visualization
+matplotlib
+seaborn
+
+# Jupyter
+jupyter
+notebook
+
+# Additional Utilities
+tqdm
+python-dotenv

@@ -1,0 +1,46 @@
+TÓM TẮT YÊU CẦU GIÁO VIÊN - DỰ ÁN DỰ ĐOÁN GIÁ ETH/BITCOIN
+====================================================================
+
+TÊN ĐỀ TÀI:
+Dự đoán giá ETH/Bitcoin theo các mô hình từ hồi quy cơ bản, tới RNN/LSTM và transformer
+
+CÁC NGUỒN DỮ LIỆU:
+1. Dữ liệu giá quá khứ (historical prices) - Dùng cho dự đoán ban đầu
+2. Thông tin ngoài:
+   - Giá vàng (Gold prices)
+   - Tỉ giá sức mạnh đồng đô la DXY (US Dollar Index)
+3. Thông tin từ x.com:
+   - Phân tích dữ liệu bằng LLM để lấy thông tin sentiment (tâm lý thị trường)
+4. Thông tin từ các bài viết liên quan đến tiền ảo:
+   - Dùng cho dự đoán xu hướng dài hạn
+
+CÁC MÔ HÌNH SỬ DỤNG:
+- Hồi quy cơ bản (Basic Regression)
+- RNN (Recurrent Neural Network)
+- LSTM (Long Short-Term Memory)
+- BiLSTM (Bidirectional LSTM)
+- Transformer
+- Các mô hình phức tạp khác
+
+CẤU TRÚC ĐỀ TÀI:
+- Đề tài gồm nhiều phần
+- MỖI NHÓM CHỈ CẦN LÀM 1 PHẦN (KHÔNG LÀM HẾT)
+- Các phần sẽ được phân công theo độ phức tạp tăng dần
+
+PHÂN CÔNG VÍ DỤ:
+- Project 1: Lấy dữ liệu từ 1 nguồn + train mô hình hồi quy cơ bản hoặc RNN đơn giản
+- Project sau đó: Các hướng phức tạp hơn như LSTM, BiLSTM, hoặc kết hợp phân tích sentiment
+
+THỜI GIAN:
+- Chốt đề tài trong tuần này và tuần sau
+- Bắt đầu thực hiện sau khi chốt đề tài
+
+TÀI LIỆU THAM KHẢO:
+1. Chuẩn bị dữ liệu.pdf
+2. Pythonic Quant A Comprehensive Guide to Python in Finance.pdf
+
+YÊU CẦU CHUNG:
+- Đọc tài liệu liên quan đến phần mình làm
+- Lựa chọn mô hình phù hợp với phần được giao
+- Tập trung vào chất lượng hơn là làm tất cả
+- Có thể xây dựng trên kết quả của các nhóm trước
