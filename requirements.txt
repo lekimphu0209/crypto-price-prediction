@@ -43,34 +43,34 @@ dependency-injector
 # Advanced Models
 # xgboost (replaced with SimpleRNN)
 
-# Dbpl
-deam
-l
+# Time Series Analysis (Chapter 4)
+pmdarima  # Auto ARIMA
+arch       # GARCH models
 
-AddL
-ghtgm
+# Risk Management & Portfolio (Chapter 6)
+pyportfolioopt  # Portfolio optimization
+scipy           # Optimization algorithms
 
-DPris
-ccxt
-wey
-equPrs
-oena
-buulsu4
-rasfrrtweepy
-requests
-openai
-beautifulsoup4
-transformers
+# Financial Mathematics (Appendix)
+# quantlib  # QuantLib - optional for advanced derivative pricing
+
+# Backtesting (Chapter 5)
+# zipline   # Backtesting framework - optional (complex setup)
 
 # Alternative Data (Chapter 3)
 # praw      # Reddit API - optional
 # googlesearch-python  # Google Trends - optional
+
 # Dashboard
 streamlit
 plotly
 
 # Additional ML
 lightgbm
+
+# Model Explainability (Chapter 7)
+shap
+lime
 
 # Data Providers
 ccxt
