@@ -9,7 +9,7 @@ from src.infrastructure.data_providers.binance_provider import BinanceProvider
 from src.infrastructure.data_providers.yfinance_provider import YahooFinanceProvider
 from src.infrastructure.repositories.csv_repository import CSVDataRepository
 from src.infrastructure.models.linear_regression import LinearRegressionModel
-from src.infrastructure.models.xgboost_model import XGBoostModel
+from src.infrastructure.models.rnn_model import SimpleRNNModel
 from src.infrastructure.models.lstm_model import LSTMModel
 from src.infrastructure.models.bilstm_model import BiLSTMModel
 from src.application.use_cases.collect_data import CollectDataUseCase
@@ -82,7 +82,7 @@ def main():
     print("\n5. Initializing models...")
     models = [
         LinearRegressionModel(),
-        XGBoostModel(n_estimators=100, max_depth=6, learning_rate=0.1),
+        SimpleRNNModel(input_shape=(30, 1), rnn_units=50, dropout_rate=0.2),
         LSTMModel(sequence_length=30, lstm_units=64, dropout_rate=0.2),
         BiLSTMModel(sequence_length=30, lstm_units=64, dropout_rate=0.2)
     ]

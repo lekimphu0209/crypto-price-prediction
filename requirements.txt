@@ -40,7 +40,7 @@ pydantic
 dependency-injector
 
 # Advanced Models
-xgboost
+# xgboost (replaced with SimpleRNN)
 
 # Dashboard
 streamlit

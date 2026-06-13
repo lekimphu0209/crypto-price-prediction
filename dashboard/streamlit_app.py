@@ -65,7 +65,7 @@ st.sidebar.markdown("---")
 st.sidebar.title("⚙️ Settings")
 symbol = st.sidebar.selectbox("Select Symbol", ["BTC", "ETH"])
 timeframe = st.sidebar.selectbox("Timeframe", ["7 Days", "30 Days", "90 Days"])
-model = st.sidebar.selectbox("Default Model", ["Ensemble", "Linear Regression", "XGBoost", "LSTM", "BiLSTM", "Transformer"])
+model = st.sidebar.selectbox("Default Model", ["Ensemble", "Linear Regression", "RNN", "LSTM", "BiLSTM", "Transformer"])
 
 # Initialize data providers
 @st.cache_resource
@@ -272,7 +272,7 @@ elif page == "📈 Price Prediction":
     st.title("📈 Price Prediction Dashboard")
     st.markdown("---")
     
-    selected_model = st.selectbox("Select Model", ["Linear Regression", "XGBoost", "LSTM", "BiLSTM", "Transformer", "Ensemble"])
+    selected_model = st.selectbox("Select Model", ["Linear Regression", "RNN", "LSTM", "BiLSTM", "Transformer", "Ensemble"])
     
     col1, col2, col3, col4 = st.columns(4)
     
@@ -315,7 +315,7 @@ elif page == "🤖 Model Comparison":
     st.markdown("---")
     
     models_data = {
-        'Model': ['Linear Regression', 'XGBoost', 'LSTM', 'BiLSTM', 'Transformer', 'Ensemble'],
+        'Model': ['Linear Regression', 'RNN', 'LSTM', 'BiLSTM', 'Transformer', 'Ensemble'],
         'RMSE': [1520, 980, 910, 870, 820, 780],
         'MAE': [1200, 750, 700, 680, 620, 590],
         'MAPE': ['4.2%', '2.8%', '2.4%', '2.3%', '2.0%', '1.9%'],
@@ -601,7 +601,7 @@ elif page == "⚙ System Status":
     st.subheader("Model Status")
     
     model_status = {
-        'Model': ['Linear Regression', 'XGBoost', 'LSTM', 'BiLSTM', 'Transformer', 'Ensemble'],
+        'Model': ['Linear Regression', 'RNN', 'LSTM', 'BiLSTM', 'Transformer', 'Ensemble'],
         'Status': ['✅ Trained', '✅ Trained', '✅ Trained', '✅ Trained', '✅ Trained', '✅ Active'],
         'Last Updated': ['2h ago', '2h ago', '2h ago', '2h ago', '2h ago', '2h ago']
     }
