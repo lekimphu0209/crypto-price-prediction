@@ -58,7 +58,7 @@ logs/
 Thumbs.db
 
 # Environment variables
-# .env (temporarily enabled for setup)
+.env
 .env.local
 
 # Streamlit
