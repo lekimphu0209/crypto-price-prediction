@@ -99,11 +99,11 @@ class ComputationalEvaluator:
                 params *= model.n_estimators
             return params
         
-        # For Keras/TensorFlow models
+        # For Keras/TensorFlow models (including RNN, LSTM, BiLSTM, Transformer)
         if hasattr(model, 'count_params'):
             return model.count_params()
         
-        # For XGBoost
+        # For XGBoost (legacy - replaced with RNN)
         if hasattr(model, 'get_num_boosting_rounds'):
             return model.get_num_boosting_rounds() * 100  # Approximate
         
