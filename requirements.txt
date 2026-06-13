@@ -29,6 +29,7 @@ notebook
 # Additional Utilities
 tqdm
 python-dotenv
+schedule   # Scheduled tasks for automation
 
 # Realtime System
 websockets
@@ -42,6 +43,28 @@ dependency-injector
 # Advanced Models
 # xgboost (replaced with SimpleRNN)
 
+# Dbpl
+deam
+l
+
+AddL
+ghtgm
+
+DPris
+ccxt
+wey
+equPrs
+oena
+buulsu4
+rasfrrtweepy
+requests
+openai
+beautifulsoup4
+transformers
+
+# Alternative Data (Chapter 3)
+# praw      # Reddit API - optional
+# googlesearch-python  # Google Trends - optional
 # Dashboard
 streamlit
 plotly
