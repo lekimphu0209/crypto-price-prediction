@@ -147,7 +147,9 @@ def init_database(db_url: str = 'sqlite:///crypto_prediction.db'):
     return engine
 
 
-def get_session(engine):
+def get_session(engine=None):
     """Create database session"""
+    if engine is None:
+        engine = init_database()
     Session = sessionmaker(bind=engine)
     return Session()
