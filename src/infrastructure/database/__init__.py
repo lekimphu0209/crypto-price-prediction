@@ -14,6 +14,8 @@ from .schema import (
     init_database,
     get_session
 )
+from .interfaces import IDatabaseRepository
+from .factory import DatabaseFactory, get_database_repository, reset_database_repository
 
 __all__ = [
     'Base',
@@ -26,5 +28,9 @@ __all__ = [
     'SystemLog',
     'ModelVersion',
     'init_database',
-    'get_session'
+    'get_session',
+    'IDatabaseRepository',
+    'DatabaseFactory',
+    'get_database_repository',
+    'reset_database_repository'
 ]
