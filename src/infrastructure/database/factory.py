@@ -3,10 +3,19 @@ Database Factory for Dependency Injection
 Allows switching between SQL and MongoDB via configuration
 """
 import os
+from pathlib import Path
 from typing import Optional
 
 from src.infrastructure.repositories.sql_repository import SQLDatabaseRepository
 from src.infrastructure.repositories.mongo_repository import MongoDatabaseRepository
+
+
+def load_env_file():
+    """Load .env file from config directory"""
+    env_path = Path(__file__).parent.parent.parent / 'config' / '.env'
+    if env_path.exists():
+        from dotenv import load_dotenv
+        load_dotenv(env_path)
 
 
 class DatabaseFactory:
@@ -16,7 +25,10 @@ class DatabaseFactory:
     def create_repository(db_type: str = None, 
                          connection_string: str = None) -> object:
         """
-        Create database repository based on configuration
+        CrLoad .env file
+        load_env_file()
+        
+        # eate database repository based on configuration
         
         Args:
             db_type: 'sql' or 'mongo' (default from env var or 'sql')

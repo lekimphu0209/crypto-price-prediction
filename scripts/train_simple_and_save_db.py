@@ -3,7 +3,12 @@ Simple Training Script with Database Integration
 Uses only LinearRegression to demonstrate database functionality
 """
 import sys
-sys.path.append('src')
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+# Load .env from config directory
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', 'config', '.env'))
 
 from datetime import datetime, timedelta
 from src.infrastructure.data_providers.binance_provider import BinanceProvider

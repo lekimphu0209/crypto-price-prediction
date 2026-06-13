@@ -58,6 +58,7 @@ logs/
 Thumbs.db
 
 # Environment variables
+config/.env
 .env
 .env.local
 
