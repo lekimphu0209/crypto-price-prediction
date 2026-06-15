@@ -1,5 +1,5 @@
 # Bitcoin Price Prediction Project - Dependencies
-# Python 3.8+ recommended
+# Python 3.10+ recommended
 
 # Data Collection
 yfinance
@@ -8,7 +8,7 @@ requests
 
 # Data Manipulation
 pandas
-numpy
+numpy<2
 
 # Database
 sqlalchemy
@@ -19,7 +19,7 @@ ta
 
 # Machine Learning
 scikit-learn
-tensorflow
+tensorflow<2.11
 keras
 
 # Visualization
