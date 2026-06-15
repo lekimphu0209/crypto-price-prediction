@@ -4,7 +4,9 @@ Handles data fetching and conversion for dashboard
 """
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+# Add project root to path
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, project_root)
 
 import pandas as pd
 from src.infrastructure.data_providers.binance_provider import BinanceProvider
@@ -38,16 +40,16 @@ def ohlcv_to_dataframe(ohlcv_list):
 
 
 @st.cache_data(ttl=60)
-def get_real_prices(binance):
+def get_real_prices(_binance):
     """Fetch real-time prices from Binance"""
     try:
-        btc_ohlcv = binance.fetch_ohlcv("BTCUSDT", "1d", limit=2)
+        btc_ohlcv = _binance.fetch_ohlcv("BTCUSDT", "1d", limit=2)
         btc_df = ohlcv_to_dataframe(btc_ohlcv)
         btc_current = btc_df['close'].iloc[-1] if len(btc_df) > 0 else None
         btc_prev = btc_df['close'].iloc[-2] if len(btc_df) > 1 else None
         btc_change = ((btc_current - btc_prev) / btc_prev * 100) if btc_prev and btc_current else 0
         
-        eth_ohlcv = binance.fetch_ohlcv("ETHUSDT", "1d", limit=2)
+        eth_ohlcv = _binance.fetch_ohlcv("ETHUSDT", "1d", limit=2)
         eth_df = ohlcv_to_dataframe(eth_ohlcv)
         eth_current = eth_df['close'].iloc[-1] if len(eth_df) > 0 else None
         eth_prev = eth_df['close'].iloc[-2] if len(eth_df) > 1 else None
@@ -63,11 +65,23 @@ def get_real_prices(binance):
         return None
 
 
+TIMEFRAME_DAYS = {
+    "7 Days": 7,
+    "30 Days": 30,
+    "90 Days": 90,
+}
+
+
+def timeframe_to_days(timeframe: str) -> int:
+    """Convert sidebar timeframe label to number of days."""
+    return TIMEFRAME_DAYS.get(timeframe, 30)
+
+
 @st.cache_data(ttl=300)
-def get_historical_data(binance, symbol_binance, days=30):
+def get_historical_data(_binance, symbol_binance, days=30):
     """Fetch historical data from Binance"""
     try:
-        ohlcv_data = binance.fetch_ohlcv(symbol_binance, "1d", limit=days)
+        ohlcv_data = _binance.fetch_ohlcv(symbol_binance, "1d", limit=days)
         df = ohlcv_to_dataframe(ohlcv_data)
         return df
     except Exception as e:
@@ -75,7 +89,7 @@ def get_historical_data(binance, symbol_binance, days=30):
 
 
 @st.cache_data(ttl=300)
-def get_macro_data(yfinance):
+def get_macro_data(_yfinance):
     """Fetch macro data from Yahoo Finance"""
     try:
         gold_symbols = ["GC=F", "GLD", "XAUUSD=X"]
@@ -86,7 +100,7 @@ def get_macro_data(yfinance):
         
         for gold_sym in gold_symbols:
             try:
-                gold_ohlcv = yfinance.fetch_ohlcv(gold_sym, "1d", limit=30)
+                gold_ohlcv = _yfinance.fetch_ohlcv(gold_sym, "1d", limit=30)
                 gold_df = ohlcv_to_dataframe(gold_ohlcv)
                 if gold_df is not None and len(gold_df) > 0:
                     break
@@ -95,7 +109,7 @@ def get_macro_data(yfinance):
         
         for dxy_sym in dxy_symbols:
             try:
-                dxy_ohlcv = yfinance.fetch_ohlcv(dxy_sym, "1d", limit=30)
+                dxy_ohlcv = _yfinance.fetch_ohlcv(dxy_sym, "1d", limit=30)
                 dxy_df = ohlcv_to_dataframe(dxy_ohlcv)
                 if dxy_df is not None and len(dxy_df) > 0:
                     break

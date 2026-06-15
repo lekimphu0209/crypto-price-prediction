@@ -14,19 +14,19 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Custom CSS — use Streamlit theme variables so metrics stay readable in light/dark mode
 st.markdown("""
 <style>
-    .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 20px;
-        border-radius: 10px;
-        color: white;
+    div[data-testid="stMetric"] {
+        background-color: var(--secondary-background-color);
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid rgba(128, 128, 128, 0.25);
     }
-    .stMetric {
-        background-color: #f0f2f6;
-        padding: 10px;
-        border-radius: 5px;
+    div[data-testid="stMetric"] label p,
+    div[data-testid="stMetric"] [data-testid="stMetricLabel"],
+    div[data-testid="stMetric"] [data-testid="stMetricValue"] {
+        color: var(--text-color);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -43,6 +43,22 @@ from modules.other_sections import (
     render_backtesting_section,
     render_system_status_section
 )
+
+# Header with settings only
+st.markdown("---")
+col1, col2 = st.columns([1, 1])
+
+with col1:
+    timeframe = st.selectbox("Timeframe", ["7 Days", "30 Days", "90 Days"], index=1)
+
+with col2:
+    model = st.selectbox(
+        "Model",
+        ["Linear Regression", "RNN", "LSTM", "BiLSTM", "Transformer"],
+        index=0
+    )
+
+st.markdown("---")
 
 # Sidebar navigation
 st.sidebar.title("📊 Navigation")
@@ -61,18 +77,11 @@ page = st.sidebar.radio(
     ]
 )
 
-# Settings
-st.sidebar.markdown("---")
-st.sidebar.title("⚙️ Settings")
-symbol = st.sidebar.selectbox("Select Symbol", ["BTC", "ETH"])
-timeframe = st.sidebar.selectbox("Timeframe", ["7 Days", "30 Days", "90 Days"])
-model = st.sidebar.selectbox("Default Model", ["Ensemble", "Linear Regression", "RNN", "LSTM", "BiLSTM", "Transformer"])
-
 # Render selected section
 if page == "🏠 Overview":
-    render_overview_section(symbol, timeframe)
+    render_overview_section(timeframe)
 elif page == "📈 Price Prediction":
-    render_prediction_section(symbol)
+    render_prediction_section(timeframe, model)
 elif page == "🤖 Model Comparison":
     render_comparison_section()
 elif page == "😊 Sentiment Analysis":
