@@ -49,6 +49,9 @@ results/
 *.npy
 *.parquet
 
+# Report folder
+report/
+
 # Logs
 *.log
 logs/
