@@ -1,0 +1,10 @@
+# Hyperparams for the LightGBM forecaster.
+# Consumed automatically by create_forecaster("LightGBM") via load_model_config.
+n_estimators: 300
+learning_rate: 0.05
+num_leaves: 31
+max_depth: -1
+min_child_samples: 20
+subsample: 0.8
+colsample_bytree: 0.8
+seed: 42
