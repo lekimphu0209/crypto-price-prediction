@@ -1,0 +1,40 @@
+{
+  "symbol": "BTCUSDT",
+  "model_name": "BiLSTM",
+  "feature_names": [
+    "close",
+    "volume",
+    "ma_7",
+    "ma_14",
+    "rsi",
+    "macd",
+    "bb_upper",
+    "bb_middle",
+    "bb_lower",
+    "atr",
+    "roc",
+    "volume_change",
+    "gold",
+    "dxy",
+    "usd_rate",
+    "gold_change",
+    "dxy_change",
+    "rate_change"
+  ],
+  "seq_len": 20,
+  "n_features": 18,
+  "horizon": 7,
+  "threshold": 0.49,
+  "metrics": {
+    "accuracy": 0.49214659685863876,
+    "balanced_accuracy": 0.529126213592233,
+    "precision": 0.4756756756756757,
+    "recall": 1.0,
+    "f1": 0.6446886446886447,
+    "threshold": 0.49,
+    "tn": 6,
+    "fp": 97,
+    "fn": 0,
+    "tp": 88
+  }
+}

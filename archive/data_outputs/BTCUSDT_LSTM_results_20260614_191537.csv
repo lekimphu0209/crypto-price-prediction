@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len
+BTCUSDT,LSTM,20260614_191537,1569.7414492364453,0.8924203839061607,288,73,20

@@ -1,0 +1,40 @@
+{
+  "symbol": "ETHUSDT",
+  "model_name": "Logistic Regression",
+  "feature_names": [
+    "close",
+    "volume",
+    "ma_7",
+    "ma_14",
+    "rsi",
+    "macd",
+    "bb_upper",
+    "bb_middle",
+    "bb_lower",
+    "atr",
+    "roc",
+    "volume_change",
+    "gold",
+    "dxy",
+    "usd_rate",
+    "gold_change",
+    "dxy_change",
+    "rate_change"
+  ],
+  "seq_len": 20,
+  "n_features": 18,
+  "horizon": 7,
+  "threshold": 0.57,
+  "metrics": {
+    "accuracy": 0.42408376963350786,
+    "balanced_accuracy": 0.4902802893309222,
+    "precision": 0.40828402366863903,
+    "recall": 0.8734177215189873,
+    "f1": 0.5564516129032258,
+    "threshold": 0.57,
+    "tn": 12,
+    "fp": 100,
+    "fn": 10,
+    "tp": 69
+  }
+}

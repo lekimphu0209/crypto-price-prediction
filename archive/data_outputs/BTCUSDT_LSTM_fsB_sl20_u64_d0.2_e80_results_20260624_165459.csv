@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
+BTCUSDT,LSTM_fsB_sl20_u64_d0.2_e80,20260624_165459,0.450261780104712,0.5,0.450261780104712,1.0,0.6209386281588448,0.38999999999999996,0,105,0,86,764,191,20,7

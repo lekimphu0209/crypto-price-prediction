@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,mse,mae,r2,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon,mode
+SYNTH,test_rnn_reg,20260712_010219,0.4835164835164835,0.4931972789115646,0.5294117647058824,0.3673469387755102,0.43373493975903615,0.0,0.1650757730097898,0.3320971663900084,-1716331.5711687806,26,16,31,18,364,91,20,7,regression

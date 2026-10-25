@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len
+BTCUSDT,RNN,20260614_191025,3731.600275259844,0.38903079409612784,288,73,20

@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
+ETHUSDT,RNN,20260624_161618,0.4973821989528796,0.5501126126126126,0.44871794871794873,0.875,0.5932203389830508,0.36,25,86,10,70,764,191,20,7

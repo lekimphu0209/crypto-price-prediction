@@ -1,0 +1,116 @@
+{
+  "BTCUSDT": {
+    "Linear Regression": {
+      "avg_mae": 2657.8286658460547,
+      "avg_r2": -1.999105728115069,
+      "avg_return_mae": 0.037608315420983245,
+      "avg_return_r2": -2.4020540008131777,
+      "avg_naive_mae": 1501.9722727272704,
+      "avg_mase": 1.8568364599342173,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.2727272727272727,
+      "folds": 2
+    },
+    "RNN": {
+      "avg_mae": 8439.553482615924,
+      "avg_r2": -23.860346441692286,
+      "avg_return_mae": 0.12214710491475228,
+      "avg_return_r2": -24.10978914968282,
+      "avg_naive_mae": 1501.9722727272704,
+      "avg_mase": 5.124778840763548,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.5454545454545454,
+      "folds": 2
+    },
+    "LSTM": {
+      "avg_mae": 2480.156095154256,
+      "avg_r2": -1.5182572930484097,
+      "avg_return_mae": 0.035972235517018086,
+      "avg_return_r2": -1.7507579420187267,
+      "avg_naive_mae": 1501.9722727272704,
+      "avg_mase": 1.5804057604535215,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.45454545454545453,
+      "folds": 2
+    },
+    "BiLSTM": {
+      "avg_mae": 12037.960552692894,
+      "avg_r2": -50.90475649029755,
+      "avg_return_mae": 0.17693255299019273,
+      "avg_return_r2": -48.544689265086845,
+      "avg_naive_mae": 1501.9722727272704,
+      "avg_mase": 6.468700543082873,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.5909090909090909,
+      "folds": 2
+    },
+    "Transformer": {
+      "avg_mae": 1592.4698093389943,
+      "avg_r2": -0.041141296606754585,
+      "avg_return_mae": 0.022604853595625737,
+      "avg_return_r2": -0.14670145359237985,
+      "avg_naive_mae": 1501.9722727272704,
+      "avg_mase": 1.0836932146682545,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.36363636363636365,
+      "folds": 2
+    }
+  },
+  "ETHUSDT": {
+    "Linear Regression": {
+      "avg_mae": 83.22938019053676,
+      "avg_r2": -2.683817015720771,
+      "avg_return_mae": 0.03937843608730557,
+      "avg_return_r2": -1.1521945407874619,
+      "avg_naive_mae": 57.8418181818182,
+      "avg_mase": 1.419319379789528,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.5,
+      "folds": 2
+    },
+    "RNN": {
+      "avg_mae": 121.88310817094401,
+      "avg_r2": -7.764609148206052,
+      "avg_return_mae": 0.057380432691911495,
+      "avg_return_r2": -4.166148564914776,
+      "avg_naive_mae": 57.8418181818182,
+      "avg_mase": 2.1739533278055108,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.45454545454545453,
+      "folds": 2
+    },
+    "LSTM": {
+      "avg_mae": 69.60652372894727,
+      "avg_r2": -1.800323208276224,
+      "avg_return_mae": 0.03325927686984512,
+      "avg_return_r2": -0.7591420565078529,
+      "avg_naive_mae": 57.8418181818182,
+      "avg_mase": 1.2699896200614167,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.5454545454545454,
+      "folds": 2
+    },
+    "BiLSTM": {
+      "avg_mae": 161.28170037665657,
+      "avg_r2": -16.81884142791258,
+      "avg_return_mae": 0.07368340367495113,
+      "avg_return_r2": -9.831121036992057,
+      "avg_naive_mae": 57.8418181818182,
+      "avg_mase": 3.278078122439503,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.5,
+      "folds": 2
+    },
+    "Transformer": {
+      "avg_mae": 95.1807859633852,
+      "avg_r2": -4.940032806354029,
+      "avg_return_mae": 0.04396252091488222,
+      "avg_return_r2": -2.700654734357668,
+      "avg_naive_mae": 57.8418181818182,
+      "avg_mase": 1.8786902134733583,
+      "beats_naive_pct": 0.0,
+      "avg_direction_accuracy": 0.40909090909090906,
+      "folds": 2
+    }
+  }
+}

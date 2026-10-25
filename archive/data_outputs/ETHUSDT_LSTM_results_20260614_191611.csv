@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len
+ETHUSDT,LSTM,20260614_191611,46.6255436946646,0.934891977343839,288,73,20

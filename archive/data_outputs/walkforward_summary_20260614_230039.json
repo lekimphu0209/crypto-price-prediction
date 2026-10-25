@@ -1,0 +1,66 @@
+{
+  "BTCUSDT": {
+    "Linear Regression": {
+      "avg_mae": 154.52930747711798,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    },
+    "RNN": {
+      "avg_mae": 4027.1030561781445,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    },
+    "LSTM": {
+      "avg_mae": 2317.8063430039547,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    },
+    "BiLSTM": {
+      "avg_mae": 1436.946731395823,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    },
+    "Transformer": {
+      "avg_mae": 678.2931182402826,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    }
+  },
+  "ETHUSDT": {
+    "Linear Regression": {
+      "avg_mae": 11.899912450136071,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    },
+    "RNN": {
+      "avg_mae": 161.09772250011542,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    },
+    "LSTM": {
+      "avg_mae": 23.817917245473154,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    },
+    "BiLSTM": {
+      "avg_mae": 89.89160208187104,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    },
+    "Transformer": {
+      "avg_mae": 10.94093027946542,
+      "avg_r2": NaN,
+      "avg_direction_accuracy": NaN,
+      "folds": 2
+    }
+  }
+}

@@ -2,8 +2,8 @@
 Train Models (Clean Architecture pipeline)
 
 Trains all models for BTC and ETH using the decoupled training pipeline:
-    data -> features (close, volume, MA7, MA14, RSI, MACD, Bollinger)
-         -> window -> next-day return -> forecaster -> registry
+    data -> features (technical + macro: Gold, DXY, USD rate)
+         -> window -> up/down trend (7-day) -> classifier -> registry
 
 Models are saved under models/{SYMBOL}/{model_slug}/.
 
@@ -24,8 +24,8 @@ SYMBOLS = ["BTCUSDT", "ETHUSDT"]
 
 def main():
     print("=" * 70)
-    print("TRAINING MODELS (Clean Architecture)")
-    print("Features: close, volume, MA7, MA14, RSI, MACD, Bollinger Bands")
+    print("TRAINING CLASSIFICATION MODELS (up/down trend, 7-day horizon)")
+    print("Features: technical (RSI, ATR, ...) + macro (Gold, DXY, USD rate)")
     print("=" * 70)
 
     pipeline = build_training_pipeline()
@@ -42,7 +42,12 @@ def main():
             if result.get("ok"):
                 m = result["metrics"]
                 summary[symbol][model_name] = m
-                print(f"  {model_name:<18} -> R2={m['r2']:.4f}  MAE=${m['mae']:,.2f}")
+                print(
+                    f"  {model_name:<18} -> Acc={m['accuracy']:.4f}  "
+                    f"BalAcc={m['balanced_accuracy']:.4f}  Thr={m['threshold']:.2f}  "
+                    f"P={m['precision']:.3f}  R={m['recall']:.3f}  F1={m['f1']:.3f}  "
+                    f"[TN={m['tn']} FP={m['fp']} FN={m['fn']} TP={m['tp']}]"
+                )
             else:
                 err = result.get("error", "unknown")
                 summary[symbol][model_name] = {"error": err}

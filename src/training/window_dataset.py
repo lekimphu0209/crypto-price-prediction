@@ -13,8 +13,9 @@ import numpy as np
 class WindowDataset:
     """Create time-ordered sliding windows for sequence models."""
 
-    def __init__(self, seq_len: int = 20):
+    def __init__(self, seq_len: int = 20, target_horizon: int = 7):
         self.seq_len = seq_len
+        self.target_horizon = target_horizon
 
     def build(
         self,
@@ -31,14 +32,15 @@ class WindowDataset:
         Returns:
             X: shape (samples, seq_len, n_features)
             base_close: close of the last day in each window, shape (samples,)
-            next_close: next-day close (forecast target source), shape (samples,)
+            future_close: close `target_horizon` days after the window, shape (samples,)
         """
-        X, base_close, next_close = [], [], []
-        for i in range(len(feature_matrix) - self.seq_len):
+        X, base_close, future_close = [], [], []
+        h = self.target_horizon
+        for i in range(len(feature_matrix) - self.seq_len - h + 1):
             X.append(feature_matrix[i:i + self.seq_len])
             base_close.append(close[i + self.seq_len - 1])
-            next_close.append(close[i + self.seq_len])
-        return np.array(X), np.array(base_close), np.array(next_close)
+            future_close.append(close[i + self.seq_len - 1 + h])
+        return np.array(X), np.array(base_close), np.array(future_close)
 
     def last_window(self, feature_matrix: np.ndarray) -> np.ndarray:
         """Return the most recent window, shape (1, seq_len, n_features)."""

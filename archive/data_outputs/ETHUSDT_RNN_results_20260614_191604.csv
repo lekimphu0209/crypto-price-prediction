@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len
+ETHUSDT,RNN,20260614_191604,101.89305095180383,0.7203901942336941,288,73,20

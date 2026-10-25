@@ -38,8 +38,7 @@ ENV/
 *.ipynb
 
 # Data files
-data/
-models/
+
 !src/infrastructure/models/
 plots/
 results/

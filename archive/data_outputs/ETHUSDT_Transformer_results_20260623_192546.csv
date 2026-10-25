@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,precision,recall,f1,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
+ETHUSDT,Transformer,20260623_192546,0.4293193717277487,0.4207650273224044,0.9625,0.5855513307984791,5,106,3,77,764,191,20,7

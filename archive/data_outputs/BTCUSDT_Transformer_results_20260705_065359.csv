@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,mse,mae,r2,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon,mode
+BTCUSDT,Transformer,20260705_065359,0.5130890052356021,0.5496670366259712,0.47468354430379744,0.8823529411764706,0.6172839506172839,0.5999999999999999,,,,23,83,10,75,764,191,20,7,classification

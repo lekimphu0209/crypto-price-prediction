@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
+BTCUSDT,RNN_no_abs_macro_sl20,20260624_193013,0.4973821989528796,0.5176079734219269,0.4626865671641791,0.7209302325581395,0.5636363636363636,0.35,33,72,24,62,764,191,20,7

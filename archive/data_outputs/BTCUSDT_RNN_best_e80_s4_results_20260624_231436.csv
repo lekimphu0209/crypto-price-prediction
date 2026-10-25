@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
+BTCUSDT,RNN_best_e80_s4,20260624_231436,0.4603174603174603,0.5048543689320388,0.4574468085106383,1.0,0.6277372262773723,0.45999999999999996,1,102,0,86,756,189,30,7

@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len,pipeline
+ETHUSDT,RNN,20260615_235848,61.5555816398303,0.964891474579635,764,177,20,fixed_no_leakage

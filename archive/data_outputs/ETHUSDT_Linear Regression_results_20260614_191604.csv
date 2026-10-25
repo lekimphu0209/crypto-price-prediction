@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len
+ETHUSDT,Linear Regression,20260614_191604,53.376880508475615,0.9133818079617293,288,73,20

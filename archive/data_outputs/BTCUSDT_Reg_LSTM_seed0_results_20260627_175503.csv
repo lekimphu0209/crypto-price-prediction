@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,mse,mae,r2,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon,mode
+BTCUSDT,Reg_LSTM_seed0,20260627_175503,0.455026455026455,0.5,0.455026455026455,1.0,0.6254545454545455,0.0,0.11059625518713917,0.31768599339542436,-28.047661456952323,0,103,0,86,756,189,30,7,regression

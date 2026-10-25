@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
+BTCUSDT,RNN_fsE_sl30_u64_d0.2_e80,20260624_165655,0.43617021276595747,0.4357045143638851,0.39361702127659576,0.43023255813953487,0.4111111111111111,0.52,45,57,49,37,750,188,30,7

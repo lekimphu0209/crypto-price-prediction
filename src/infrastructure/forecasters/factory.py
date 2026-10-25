@@ -9,7 +9,7 @@ from src.infrastructure.forecasters.linear_forecaster import LinearForecaster
 from src.infrastructure.forecasters.keras_forecaster import KerasForecaster, SUPPORTED as KERAS_MODELS
 
 # All model names the system supports
-SUPPORTED_MODELS = ["Linear Regression", "RNN", "LSTM", "BiLSTM", "Transformer"]
+SUPPORTED_MODELS = ["Logistic Regression", "RNN", "LSTM", "BiLSTM", "Transformer"]
 
 
 def create_forecaster(model_name: str) -> IForecaster:
@@ -19,7 +19,7 @@ def create_forecaster(model_name: str) -> IForecaster:
     Raises:
         ValueError if the model name is unknown.
     """
-    if model_name == "Linear Regression":
+    if model_name == "Logistic Regression":
         return LinearForecaster()
     if model_name in KERAS_MODELS:
         return KerasForecaster(model_name)

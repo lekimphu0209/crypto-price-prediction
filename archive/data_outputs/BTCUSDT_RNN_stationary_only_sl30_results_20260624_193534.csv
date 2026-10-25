@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
+BTCUSDT,RNN_stationary_only_sl30,20260624_193534,0.4712041884816754,0.5022148394241417,0.45161290322580644,0.813953488372093,0.5809128630705395,0.32999999999999996,20,85,16,70,760,191,30,7

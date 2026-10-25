@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len
+BTCUSDT,Linear Regression,20260614_191025,1352.1858490554616,0.9166224399237586,288,73,20

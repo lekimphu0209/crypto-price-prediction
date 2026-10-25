@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
+BTCUSDT,LR_C100.0_cwbalanced,20260625_205259,0.4603174603174603,0.4962181079250395,0.45294117647058824,0.8953488372093024,0.6015625,0.6299999999999999,10,93,9,77,756,189,30,7

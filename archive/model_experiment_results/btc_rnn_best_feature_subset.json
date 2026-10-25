@@ -1,0 +1,24 @@
+{
+  "symbol": "BTCUSDT",
+  "model_name": "RNN",
+  "feature_set": "B",
+  "subset": "full_B",
+  "exclude": [],
+  "n_features": 26,
+  "seq_len": 30,
+  "rnn_hyperparams": {
+    "units": 32,
+    "dropout": 0.1,
+    "epochs": 80,
+    "batch_size": 16,
+    "learning_rate": 0.001,
+    "early_stopping_patience": 10
+  },
+  "label": "RNN_full_B_sl30",
+  "balanced_accuracy": 0.5710092571686611,
+  "accuracy": 0.544973544973545,
+  "f1": 0.6324786324786325,
+  "precision": 0.5,
+  "recall": 0.8604651162790697,
+  "threshold": 0.5399999999999999
+}

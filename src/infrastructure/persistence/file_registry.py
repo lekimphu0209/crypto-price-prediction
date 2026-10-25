@@ -54,6 +54,8 @@ class FileModelRegistry(IModelRegistry):
         feature_names: List[str],
         seq_len: int,
         metrics: Dict[str, float],
+        horizon: int = 7,
+        threshold: float = 0.5,
     ) -> None:
         directory = self._model_dir(symbol, forecaster.name)
         os.makedirs(directory, exist_ok=True)
@@ -67,6 +69,8 @@ class FileModelRegistry(IModelRegistry):
             "feature_names": feature_names,
             "seq_len": seq_len,
             "n_features": len(feature_names),
+            "horizon": horizon,
+            "threshold": threshold,
             "metrics": metrics,
         }
         with open(os.path.join(directory, META_FILE), "w", encoding="utf-8") as f:
@@ -90,6 +94,8 @@ class FileModelRegistry(IModelRegistry):
             "scaler": scaler,
             "feature_names": meta["feature_names"],
             "seq_len": meta["seq_len"],
+            "horizon": meta.get("horizon", 7),
+            "threshold": meta.get("threshold", 0.5),
             "metrics": meta.get("metrics", {}),
         }
 

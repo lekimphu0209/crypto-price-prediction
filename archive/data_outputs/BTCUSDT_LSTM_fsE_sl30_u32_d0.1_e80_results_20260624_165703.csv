@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
+BTCUSDT,LSTM_fsE_sl30_u32_d0.1_e80,20260624_165703,0.4627659574468085,0.5049019607843137,0.45989304812834225,1.0,0.63003663003663,0.38,1,101,0,86,750,188,30,7

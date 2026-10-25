@@ -1,0 +1,2 @@
+symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len,pipeline
+BTCUSDT,Linear Regression,20260615_235758,1481.0130108025721,0.9491002065049965,764,177,20,fixed_no_leakage
