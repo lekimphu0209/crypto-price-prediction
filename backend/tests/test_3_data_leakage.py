@@ -19,6 +19,9 @@ from src.models.keras_forecaster import KerasForecaster
 from src.infrastructure.persistence.file_registry import FileModelRegistry
 from src.training.datasets.market_data_loader import MarketDataLoader
 
+# Test artifacts go next to this file (gitignored), never into the cwd/repo root.
+_ARTIFACTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_artifacts")
+
 
 def create_test_data(n_samples=200):
     """Create synthetic test data."""
@@ -58,7 +61,7 @@ def test_threshold_tuning_no_leakage():
     loader = MockLoader(df)
     extractor = TechnicalExtractor(feature_set="B")
     target_builder = TrendTargetBuilder()
-    registry = FileModelRegistry("models/test")
+    registry = FileModelRegistry(os.path.join(_ARTIFACTS, "models"))
     
     pipeline = TrainingPipeline(
         loader=loader,
@@ -67,7 +70,7 @@ def test_threshold_tuning_no_leakage():
         registry=registry,
         seq_len=20,
         train_split=0.8,
-        data_dir="data/test",
+        data_dir=os.path.join(_ARTIFACTS, "data"),
         target_horizon=7,
         threshold_metric="balanced_accuracy",
         mode="classification",
@@ -142,7 +145,7 @@ def test_early_stopping_no_leakage():
     loader = MockLoader(df)
     extractor = TechnicalExtractor(feature_set="B")
     target_builder = TrendTargetBuilder()
-    registry = FileModelRegistry("models/test")
+    registry = FileModelRegistry(os.path.join(_ARTIFACTS, "models"))
     
     pipeline = TrainingPipeline(
         loader=loader,
@@ -151,7 +154,7 @@ def test_early_stopping_no_leakage():
         registry=registry,
         seq_len=20,
         train_split=0.8,
-        data_dir="data/test",
+        data_dir=os.path.join(_ARTIFACTS, "data"),
         target_horizon=7,
         threshold_metric="balanced_accuracy",
         mode="classification",
@@ -229,7 +232,7 @@ def test_scaler_no_leakage():
     loader = MockLoader(df)
     extractor = TechnicalExtractor(feature_set="B")
     target_builder = TrendTargetBuilder()
-    registry = FileModelRegistry("models/test")
+    registry = FileModelRegistry(os.path.join(_ARTIFACTS, "models"))
     
     pipeline = TrainingPipeline(
         loader=loader,
@@ -238,7 +241,7 @@ def test_scaler_no_leakage():
         registry=registry,
         seq_len=20,
         train_split=0.8,
-        data_dir="data/test",
+        data_dir=os.path.join(_ARTIFACTS, "data"),
         target_horizon=7,
         threshold_metric="balanced_accuracy",
         mode="classification",
