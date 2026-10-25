@@ -132,11 +132,12 @@ Hệ thống cần:
 
 Hệ thống được xây dựng theo **Clean Architecture** và **SOLID principles**:
 - `src/domain/`: interfaces và entities.
-- `src/features/`: indicators và technical extractor.
-- `src/training/`: pipeline, data loader, target builder, window dataset.
-- `src/infrastructure/`: data providers, forecasters, model registry.
-- `src/api/`: FastAPI routes.
-- `dashboard/`: Streamlit dashboard.
+- `backend/src/features/`: indicators và extractors (registry).
+- `backend/src/training/`: pipelines, datasets, targets, composition.
+- `backend/src/models/`: forecasters plugin hub (registry).
+- `backend/src/infrastructure/`: data providers, model registry.
+- `backend/src/api/`: FastAPI routes.
+- `gui/`: Streamlit dashboard (pages/components/services).
 
 ## 3.3. Thiết kế mô hình
 
@@ -327,19 +328,11 @@ Bảng t-test cặp (n=50):
 
 ```
 crypto-price-prediction/
-├── src/
-│   ├── api/
-│   ├── domain/
-│   ├── features/
-│   ├── infrastructure/
-│   ├── training/
-│   └── utils/
-├── scripts/
-├── models/
-├── dashboard/
+├── backend/       # src/ (api, domain, features, models, training, infrastructure, utils),
+│                  # configs/, scripts/, tests/, models/, data/
+├── gui/           # app.py, pages/, components/, services/
 ├── report/
-├── docs/
-└── tests/
+└── docs/
 ```
 
 ## Phụ lục B: Các script thực nghiệm chính

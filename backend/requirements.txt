@@ -1,0 +1,36 @@
+# Backend (engine) dependencies - training, features, API.
+# GUI deps live in gui/requirements.txt.
+
+# Data collection
+yfinance
+python-binance
+ccxt
+requests
+
+# Data manipulation
+pandas
+numpy<2
+
+# Technical analysis
+ta
+
+# Machine learning
+scikit-learn
+tensorflow<2.11
+keras
+joblib
+
+# API
+fastapi
+uvicorn
+pydantic
+
+# Config + utilities
+pyyaml
+python-dotenv
+tqdm
+
+# Optional / research
+lightgbm
+matplotlib
+seaborn

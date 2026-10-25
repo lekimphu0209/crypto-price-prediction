@@ -1,0 +1,13 @@
+# GUI (frontend) dependencies - Streamlit dashboard only.
+# Backend deps live in backend/requirements.txt.
+# Note: services/data_providers.py bridges into backend's data providers,
+# so yfinance/python-binance/ccxt are also needed here for that bridge.
+
+streamlit
+plotly
+requests
+pandas
+numpy
+yfinance
+python-binance
+ccxt

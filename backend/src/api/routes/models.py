@@ -12,7 +12,11 @@ import json
 
 router = APIRouter()
 
-MODELS_DIR = "models"
+# Absolute path to backend/models regardless of the cwd uvicorn runs from.
+MODELS_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
+    "models",
+)
 
 
 class ModelInfo(BaseModel):

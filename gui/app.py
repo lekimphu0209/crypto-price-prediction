@@ -7,7 +7,7 @@ Modular layout:
     services/    API client + data providers (only place touching the backend)
     config.py    page registry + shared constants
 
-Run:  streamlit run dashboard/app.py
+Run:  streamlit run gui/app.py
 """
 import importlib
 import os

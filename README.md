@@ -241,7 +241,7 @@ python exploration/bilstm_macro_test.py
 ### Chạy API
 
 ```bash
-uvicorn src.api.main:app --host 0.0.0.0 --port 8502
+uvicorn src.api.main:app --app-dir backend --host 0.0.0.0 --port 8502
 # Endpoint: GET /api/predict/?symbol=BTCUSDT
 # Endpoint: GET /api/models/
 ```
@@ -249,7 +249,7 @@ uvicorn src.api.main:app --host 0.0.0.0 --port 8502
 ### Chạy Dashboard
 
 ```bash
-streamlit run dashboard/app.py
+streamlit run gui/app.py
 # Mở: http://localhost:8501
 ```
 
@@ -260,82 +260,48 @@ streamlit run dashboard/app.py
 ```
 crypto-price-prediction/
 │
-├── src/
-│   ├── domain/
-│   │   ├── interfaces/          # IFeatureExtractor, IForecaster, ...
-│   │   ├── entities/            # OHLCV
-│   │   └── value_objects/       # Symbol, Interval
-│   │
-│   ├── features/
-│   │   ├── indicators.py           # MA, RSI, MACD, BB, ATR, ...
-│   │   ├── extractors/
-│   │   │   ├── technical.py        # TechnicalExtractor (feature sets A/B/C/E)
-│   │   │   └── registry.py         # @register_extractor / build_extractor(config)
-│   │   └── market_regime/          # Regime detector + RegimeFeatureExtractor
-│   │
-│   ├── models/                     # Forecaster plugin hub
-│   │   ├── keras_forecaster.py     # RNN / LSTM / BiLSTM / Transformer
-│   │   ├── linear_forecaster.py    # Logistic Regression
-│   │   └── registry.py             # @register_forecaster / create_forecaster
-│   │
-│   ├── training/
-│   │   ├── pipelines/              # train_pipeline.py, predict_pipeline.py
-│   │   ├── targets/                # trend_target.py, regression_target.py
-│   │   ├── datasets/               # window_dataset.py, market_data_loader.py
-│   │   └── composition.py          # Composition root / wiring
-│   │
-│   ├── evaluation/
-│   │   └── metrics.py              # classification / regression metrics
-│   │
-│   ├── infrastructure/
-│   │   ├── data_providers/
-│   │   │   ├── binance_provider.py
-│   │   │   └── yfinance_provider.py
-│   │   └── persistence/
-│   │       └── file_registry.py       # Lưu model.keras / scaler.pkl / meta.json
-│   │
-│   ├── api/
-│   │   ├── main.py                    # FastAPI app
-│   │   └── routes/
-│   │       ├── predict.py             # direction + probability response
-│   │       └── models.py
-│   │
-│   ├── config.py                      # YAML config loader (configs/)
-│   └── utils/
-│       └── determinism.py             # set_full_determinism(seed)
+├── backend/                              # ====== CHỨC NĂNG (engine) ======
+│   ├── src/
+│   │   ├── domain/                       # entities, value_objects, interfaces
+│   │   ├── features/
+│   │   │   ├── indicators.py             # MA, RSI, MACD, BB, ATR, ...
+│   │   │   ├── extractors/               # technical.py + registry.py
+│   │   │   └── market_regime/            # Regime detector + extractor
+│   │   ├── models/                       # Forecaster plugin hub
+│   │   │   ├── keras_forecaster.py       # RNN / LSTM / BiLSTM / Transformer
+│   │   │   ├── linear_forecaster.py      # Logistic Regression
+│   │   │   └── registry.py               # @register_forecaster
+│   │   ├── training/
+│   │   │   ├── pipelines/                # train_pipeline, predict_pipeline
+│   │   │   ├── targets/                  # trend_target, regression_target
+│   │   │   ├── datasets/                 # window_dataset, market_data_loader
+│   │   │   └── composition.py            # Composition root / wiring
+│   │   ├── evaluation/metrics.py
+│   │   ├── infrastructure/
+│   │   │   ├── data_providers/           # binance, yfinance
+│   │   │   └── persistence/file_registry.py
+│   │   ├── api/                          # FastAPI app + routes
+│   │   ├── config.py                     # YAML config loader
+│   │   └── utils/determinism.py
+│   ├── configs/                          # default.yaml + models/*.yaml
+│   ├── scripts/                          # train_models, download_data
+│   ├── tests/
+│   ├── models/                           # artifacts: {SYMBOL}/{slug}/
+│   ├── data/                             # macro_cache.csv, datasets
+│   └── requirements.txt
 │
-├── configs/
-│   ├── default.yaml                   # seq_len / horizon / train_days / extractor
-│   └── models/                        # per-model hyperparams (lstm.yaml, ...)
+├── gui/                                  # ====== GIAO DIỆN (frontend) ======
+│   ├── app.py                            # Entry (streamlit run gui/app.py)
+│   ├── config.py                         # PAGES registry + constants
+│   ├── pages/                            # 1 file = 1 page (render())
+│   ├── components/                       # badges, model_selector
+│   ├── services/                         # api_client (HTTP) + data_providers
+│   └── requirements.txt
 │
-├── scripts/
-│   ├── train_models.py                # Train all registered models
-│   ├── train_models_with_regime.py    # Train with regime features
-│   └── download_data.py               # Download OHLCV datasets
+├── docs/  report/  config/               # Tài liệu, báo cáo, env
 │
-├── tests/
-│   ├── test_1_window_dataset.py
-│   ├── test_2_lookahead_bias.py
-│   ├── test_3_data_leakage.py
-│   ├── test_4_target_builder.py
-│   └── test_5_majority_baseline.py
-│
-├── dashboard/
-│   ├── app.py                            # Entry point (streamlit run dashboard/app.py)
-│   ├── config.py                         # Page registry + constants
-│   ├── pages/                            # One file per page (render() contract)
-│   ├── components/                       # Reusable widgets (badges, model selector)
-│   └── services/                         # API client + data providers
-│
-├── docs/
-│   └── bao_cao.md                        # Nội dung báo cáo chi tiết
-│
-├── models/                               # Trained model artifacts
-│   ├── BTCUSDT/<model_slug>/             # model.keras|model.pkl + scaler.pkl + meta.json
-│   ├── ETHUSDT/<model_slug>/             # meta.json chứa mode + extractor_config + metrics
-│   └── _summary.json
-│
-├── requirements.txt
+├── requirements.txt                      # -r backend + -r gui + pytest
+├── pytest.ini                            # pythonpath=backend
 └── README.md
 ```
 

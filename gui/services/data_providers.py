@@ -4,9 +4,14 @@ Handles data fetching and conversion for dashboard
 """
 import sys
 import os
-# Add project root to path
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, project_root)
+# Add backend/ to path so the src package (engine layer) is importable.
+# gui/ services are the only bridge allowed to touch backend code directly;
+# everything else on the frontend talks to the backend over the HTTP API.
+_backend_dir = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "backend",
+)
+sys.path.insert(0, _backend_dir)
 
 import pandas as pd
 from src.infrastructure.data_providers.binance_provider import BinanceProvider

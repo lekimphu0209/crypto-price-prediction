@@ -39,7 +39,6 @@ ENV/
 
 # Data files
 
-!src/infrastructure/models/
 plots/
 results/
 *.csv

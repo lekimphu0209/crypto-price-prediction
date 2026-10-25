@@ -1,0 +1,62 @@
+{
+  "symbol": "TEST",
+  "model_name": "RNN",
+  "feature_names": [
+    "close",
+    "volume",
+    "ma_7",
+    "ma_14",
+    "rsi",
+    "macd",
+    "bb_upper",
+    "bb_middle",
+    "bb_lower",
+    "atr",
+    "roc",
+    "volume_change",
+    "gold",
+    "dxy",
+    "usd_rate",
+    "gold_change",
+    "dxy_change",
+    "rate_change",
+    "log_return_1",
+    "log_return_7",
+    "close_to_ma_7",
+    "close_to_ma_14",
+    "bb_position",
+    "bb_width",
+    "atr_close_ratio",
+    "log_volume"
+  ],
+  "seq_len": 20,
+  "n_features": 26,
+  "horizon": 7,
+  "threshold": 0.45999999999999996,
+  "mode": "classification",
+  "extractor_config": {
+    "name": "technical",
+    "params": {
+      "ma_short": 7,
+      "ma_long": 14,
+      "rsi_period": 14,
+      "bb_window": 20,
+      "atr_period": 14,
+      "roc_period": 12,
+      "feature_set": "B",
+      "exclude_features": []
+    }
+  },
+  "metrics": {
+    "accuracy": 0.6129032258064516,
+    "balanced_accuracy": 0.5918803418803419,
+    "precision": 0.5454545454545454,
+    "recall": 0.46153846153846156,
+    "f1": 0.5,
+    "threshold": 0.45999999999999996,
+    "tn": 13,
+    "fp": 5,
+    "fn": 7,
+    "tp": 6
+  }
+}
