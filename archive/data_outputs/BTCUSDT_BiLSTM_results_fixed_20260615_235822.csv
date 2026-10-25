@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len,pipeline
-BTCUSDT,BiLSTM,20260615_235822,1394.8097757147568,0.9537423259235182,764,177,20,fixed_no_leakage

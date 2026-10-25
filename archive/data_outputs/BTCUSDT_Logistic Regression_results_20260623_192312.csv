@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,accuracy,precision,recall,f1,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
-BTCUSDT,Logistic Regression,20260623_192312,0.4712041884816754,0.45664739884393063,0.9186046511627907,0.61003861003861,11,94,7,79,764,191,20,7

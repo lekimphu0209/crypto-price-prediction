@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,mse,mae,r2,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon,mode
-BTCUSDT,Logistic Regression,20260705_065322,0.44502617801047123,0.493007769145394,0.441340782122905,0.9294117647058824,0.5984848484848485,0.3,,,,6,100,6,79,764,191,20,7,classification

@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
-BTCUSDT,RNN_no_roc_sl20,20260624_193135,0.5130890052356021,0.4845514950166113,0.4146341463414634,0.19767441860465115,0.2677165354330709,0.6299999999999999,81,24,69,17,764,191,20,7

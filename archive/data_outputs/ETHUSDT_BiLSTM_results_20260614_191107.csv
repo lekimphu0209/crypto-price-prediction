@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len
-ETHUSDT,BiLSTM,20260614_191107,85.78455421020773,0.8028478673607499,288,73,20

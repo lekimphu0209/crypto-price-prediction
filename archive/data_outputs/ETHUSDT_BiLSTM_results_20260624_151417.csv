@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
-ETHUSDT,BiLSTM,20260624_151417,0.4973821989528796,0.5483671171171172,0.44805194805194803,0.8625,0.5897435897435898,0.69,26,85,11,69,764,191,20,7

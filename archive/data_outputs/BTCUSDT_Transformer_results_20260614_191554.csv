@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len
-BTCUSDT,Transformer,20260614_191554,4173.732322290405,0.2821740261491186,288,73,20

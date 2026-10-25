@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
-BTCUSDT,Logistic_Regression_fsE_sl20_C1.0,20260624_165558,0.4263157894736842,0.4628801431127012,0.4319526627218935,0.8488372093023255,0.5725490196078431,0.32,8,96,13,73,758,190,20,7

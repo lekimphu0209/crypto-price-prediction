@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len,pipeline
-BTCUSDT,RNN,20260615_235758,1618.8178574675921,0.9410576899754983,764,177,20,fixed_no_leakage

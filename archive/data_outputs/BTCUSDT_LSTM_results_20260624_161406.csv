@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
-BTCUSDT,LSTM,20260624_161406,0.4816753926701571,0.5127906976744186,0.45806451612903226,0.8255813953488372,0.5892116182572614,0.49999999999999994,21,84,15,71,764,191,20,7

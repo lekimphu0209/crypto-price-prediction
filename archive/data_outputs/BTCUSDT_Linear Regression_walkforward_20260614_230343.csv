@@ -1,3 +1,0 @@
-fold,train_start,train_end,test_start,test_end,mae,r2,direction_accuracy,train_samples,test_samples
-1,0,250,250,300,3029.2179745429753,-1.2521554179360508,0.3,211,11
-2,50,300,300,350,2286.439357149134,-2.7460560382940873,0.4,211,11

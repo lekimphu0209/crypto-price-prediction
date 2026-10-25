@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon
-ETHUSDT,Logistic Regression,20260624_161707,0.45077720207253885,0.4652777777777778,0.391304347826087,0.5555555555555556,0.45918367346938777,0.33999999999999997,42,70,36,45,768,193,20,7

@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,mse,mae,r2,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon,mode
-SYNTH,test_rnn,20260712_010210,0.5384615384615384,0.5272108843537415,0.559322033898305,0.673469387755102,0.6111111111111112,0.47,,,,16,26,16,33,364,91,20,7,classification

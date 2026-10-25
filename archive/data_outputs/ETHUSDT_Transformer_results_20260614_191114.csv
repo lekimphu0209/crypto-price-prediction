@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len
-ETHUSDT,Transformer,20260614_191114,40.75100667030628,0.9427109757783317,288,73,20

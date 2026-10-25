@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len,pipeline
-ETHUSDT,BiLSTM,20260615_175930,64.23491276273734,0.95963955138296,764,177,20,fixed_no_leakage

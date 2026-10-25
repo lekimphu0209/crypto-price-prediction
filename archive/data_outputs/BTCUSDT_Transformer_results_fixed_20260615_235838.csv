@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,mae,r2,train_samples,test_samples,seq_len,pipeline
-BTCUSDT,Transformer,20260615_235838,1462.8967144167098,0.9494052162132278,764,177,20,fixed_no_leakage

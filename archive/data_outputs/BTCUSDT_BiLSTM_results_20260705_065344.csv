@@ -1,2 +1,0 @@
-symbol,model_name,timestamp,accuracy,balanced_accuracy,precision,recall,f1,threshold,mse,mae,r2,tn,fp,fn,tp,train_samples,test_samples,seq_len,horizon,mode
-BTCUSDT,BiLSTM,20260705_065344,0.5078534031413613,0.5181465038845727,0.46017699115044247,0.611764705882353,0.5252525252525253,0.5599999999999999,,,,45,61,33,52,764,191,20,7,classification
