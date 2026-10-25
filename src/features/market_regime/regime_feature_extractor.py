@@ -10,8 +10,8 @@ from typing import List
 import pandas as pd
 
 from src.domain.interfaces.feature_extractor import IFeatureExtractor
-from src.features.technical_extractor import TechnicalExtractor
-from src.market_regime.regime_detector import add_regime_features, REGIME_BULL, REGIME_BEAR, REGIME_SIDEWAYS
+from src.features.extractors.technical import TechnicalExtractor
+from src.features.market_regime.regime_detector import add_regime_features, REGIME_BULL, REGIME_BEAR, REGIME_SIDEWAYS
 
 
 class RegimeFeatureExtractor(IFeatureExtractor):
@@ -53,6 +53,21 @@ class RegimeFeatureExtractor(IFeatureExtractor):
         self.slope_window = slope_window
         self.onehot = onehot
         self.include_label = include_label
+
+    def to_config(self) -> dict:
+        """Serialize settings so the model bundle can rebuild this extractor."""
+        base_cfg = self.base_extractor.to_config() if hasattr(self.base_extractor, "to_config") else {}
+        return {
+            "name": "regime",
+            "params": {
+                "base": base_cfg,
+                "short_window": self.short_window,
+                "long_window": self.long_window,
+                "slope_window": self.slope_window,
+                "onehot": self.onehot,
+                "include_label": self.include_label,
+            },
+        }
 
     def extract(self, data: pd.DataFrame) -> pd.DataFrame:
         # 1. Build the standard technical feature set.

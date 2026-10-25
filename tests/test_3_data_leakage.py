@@ -12,12 +12,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 import pandas as pd
 
-from src.training.training_pipeline import TrainingPipeline
-from src.features.technical_extractor import TechnicalExtractor
-from src.training.return_target_builder import TrendTargetBuilder
-from src.infrastructure.forecasters.keras_forecaster import KerasForecaster
+from src.training.pipelines.train_pipeline import TrainingPipeline
+from src.features.extractors.technical import TechnicalExtractor
+from src.training.targets.trend_target import TrendTargetBuilder
+from src.models.keras_forecaster import KerasForecaster
 from src.infrastructure.persistence.file_registry import FileModelRegistry
-from src.training.market_data_loader import MarketDataLoader
+from src.training.datasets.market_data_loader import MarketDataLoader
 
 
 def create_test_data(n_samples=200):

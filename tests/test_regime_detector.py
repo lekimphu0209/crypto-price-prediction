@@ -8,7 +8,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.market_regime.regime_detector import (
+from src.features.market_regime.regime_detector import (
     detect_regime_trend_ma,
     segment_regimes,
     add_regime_features,

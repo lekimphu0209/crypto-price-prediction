@@ -33,6 +33,7 @@ notebook
 # Additional Utilities
 tqdm
 python-dotenv
+pyyaml
 schedule   # Scheduled tasks for automation
 
 # Realtime System

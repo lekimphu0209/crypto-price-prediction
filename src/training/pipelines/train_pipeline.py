@@ -33,8 +33,8 @@ from src.domain.interfaces.feature_extractor import IFeatureExtractor
 from src.domain.interfaces.target_builder import ITargetBuilder
 from src.domain.interfaces.forecaster import IForecaster
 from src.domain.interfaces.model_registry import IModelRegistry
-from src.training.market_data_loader import MarketDataLoader
-from src.training.window_dataset import WindowDataset
+from src.training.datasets.market_data_loader import MarketDataLoader
+from src.training.datasets.window_dataset import WindowDataset
 
 
 class TrainingPipeline:
@@ -202,6 +202,9 @@ class TrainingPipeline:
         print(f"  Saved training results to: {results_csv_path}")
 
         # 8. Persist
+        extractor_config = (
+            self.extractor.to_config() if hasattr(self.extractor, "to_config") else None
+        )
         self.registry.save(
             symbol=symbol,
             forecaster=forecaster,
@@ -211,5 +214,7 @@ class TrainingPipeline:
             metrics=metrics,
             horizon=self.target_horizon,
             threshold=metrics["threshold"],
+            mode=self.mode,
+            extractor_config=extractor_config,
         )
         return {"ok": True, "metrics": metrics}

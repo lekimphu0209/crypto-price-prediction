@@ -14,9 +14,9 @@ import numpy as np
 import pandas as pd
 
 from src.training.composition import build_training_pipeline
-from src.features.technical_extractor import TechnicalExtractor
-from src.training.return_target_builder import TrendTargetBuilder
-from src.training.window_dataset import WindowDataset
+from src.features.extractors.technical import TechnicalExtractor
+from src.training.targets.trend_target import TrendTargetBuilder
+from src.training.datasets.window_dataset import WindowDataset
 from sklearn.preprocessing import RobustScaler
 from sklearn.metrics import (
     accuracy_score,
@@ -231,7 +231,7 @@ def test_real_data_baseline():
     feature_matrix = scaler.transform(values)
     
     # Build windows
-    from src.training.window_dataset import WindowDataset
+    from src.training.datasets.window_dataset import WindowDataset
     window = WindowDataset(seq_len=30, target_horizon=7)
     X, base_close, future_close = window.build(feature_matrix, close)
     y = pipeline.target_builder.build(base_close, future_close)

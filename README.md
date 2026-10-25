@@ -249,7 +249,7 @@ uvicorn src.api.main:app --host 0.0.0.0 --port 8502
 ### Chạy Dashboard
 
 ```bash
-streamlit run dashboard/streamlit_app.py
+streamlit run dashboard/app.py
 # Mở: http://localhost:8501
 ```
 
@@ -267,21 +267,27 @@ crypto-price-prediction/
 │   │   └── value_objects/       # Symbol, Interval
 │   │
 │   ├── features/
-│   │   ├── indicators.py        # MA, RSI, MACD, BB, ATR, ...
-│   │   └── technical_extractor.py  # TechnicalExtractor (feature sets A/B/C/E)
+│   │   ├── indicators.py           # MA, RSI, MACD, BB, ATR, ...
+│   │   ├── extractors/
+│   │   │   ├── technical.py        # TechnicalExtractor (feature sets A/B/C/E)
+│   │   │   └── registry.py         # @register_extractor / build_extractor(config)
+│   │   └── market_regime/          # Regime detector + RegimeFeatureExtractor
+│   │
+│   ├── models/                     # Forecaster plugin hub
+│   │   ├── keras_forecaster.py     # RNN / LSTM / BiLSTM / Transformer
+│   │   ├── linear_forecaster.py    # Logistic Regression
+│   │   └── registry.py             # @register_forecaster / create_forecaster
 │   │
 │   ├── training/
-│   │   ├── training_pipeline.py    # Orchestrator
-│   │   ├── window_dataset.py       # Sliding window (seq_len=20)
-│   │   ├── return_target_builder.py  # TrendTargetBuilder (UP/DOWN)
-│   │   ├── market_data_loader.py
+│   │   ├── pipelines/              # train_pipeline.py, predict_pipeline.py
+│   │   ├── targets/                # trend_target.py, regression_target.py
+│   │   ├── datasets/               # window_dataset.py, market_data_loader.py
 │   │   └── composition.py          # Composition root / wiring
 │   │
+│   ├── evaluation/
+│   │   └── metrics.py              # classification / regression metrics
+│   │
 │   ├── infrastructure/
-│   │   ├── forecasters/
-│   │   │   ├── keras_forecaster.py    # RNN / LSTM / BiLSTM / Transformer
-│   │   │   ├── linear_forecaster.py   # SGDClassifier (log_loss)
-│   │   │   └── factory.py
 │   │   ├── data_providers/
 │   │   │   ├── binance_provider.py
 │   │   │   └── yfinance_provider.py
@@ -291,22 +297,21 @@ crypto-price-prediction/
 │   ├── api/
 │   │   ├── main.py                    # FastAPI app
 │   │   └── routes/
-│   │       ├── predict.py
+│   │       ├── predict.py             # direction + probability response
 │   │       └── models.py
 │   │
+│   ├── config.py                      # YAML config loader (configs/)
 │   └── utils/
 │       └── determinism.py             # set_full_determinism(seed)
 │
-├── scripts/
-│   ├── train_btc_walkforward.py          # RNN + LSTM
-│   ├── train_btc_walkforward_bilstm.py   # BiLSTM
-│   ├── train_btc_walkforward_logistic.py # Logistic
-│   └── compare_all_models_ttest.py       # T-test comparison
+├── configs/
+│   ├── default.yaml                   # seq_len / horizon / train_days / extractor
+│   └── models/                        # per-model hyperparams (lstm.yaml, ...)
 │
-├── exploration/                          # EDA / ablation (độc lập với pipeline)
-│   ├── macro_correlation_analysis.py     # Correlation: macro vs BTC direction
-│   ├── bilstm_macro_test.py              # Ablation: BiLSTM + macro features
-│   └── charts/                           # Hình ảnh EDA output
+├── scripts/
+│   ├── train_models.py                # Train all registered models
+│   ├── train_models_with_regime.py    # Train with regime features
+│   └── download_data.py               # Download OHLCV datasets
 │
 ├── tests/
 │   ├── test_1_window_dataset.py
@@ -316,16 +321,19 @@ crypto-price-prediction/
 │   └── test_5_majority_baseline.py
 │
 ├── dashboard/
-│   └── streamlit_app.py
+│   ├── app.py                            # Entry point (streamlit run dashboard/app.py)
+│   ├── config.py                         # Page registry + constants
+│   ├── pages/                            # One file per page (render() contract)
+│   ├── components/                       # Reusable widgets (badges, model selector)
+│   └── services/                         # API client + data providers
 │
 ├── docs/
 │   └── bao_cao.md                        # Nội dung báo cáo chi tiết
 │
-├── models/                               # Kết quả thực nghiệm (gitignored)
-│   ├── btc_walkforward_bilstm_results.json
-│   ├── btc_walkforward_results_detailed.json
-│   ├── btc_walkforward_logistic_results.json
-│   └── btc_bilstm_macro_test.json
+├── models/                               # Trained model artifacts
+│   ├── BTCUSDT/<model_slug>/             # model.keras|model.pkl + scaler.pkl + meta.json
+│   ├── ETHUSDT/<model_slug>/             # meta.json chứa mode + extractor_config + metrics
+│   └── _summary.json
 │
 ├── requirements.txt
 └── README.md

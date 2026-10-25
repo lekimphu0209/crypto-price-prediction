@@ -14,10 +14,10 @@ import pandas as pd
 import json
 
 from src.training.composition import build_training_pipeline
-from src.features.technical_extractor import TechnicalExtractor
-from src.training.return_target_builder import TrendTargetBuilder
-from src.infrastructure.forecasters.keras_forecaster import KerasForecaster
-from src.infrastructure.forecasters.linear_forecaster import LinearForecaster
+from src.features.extractors.technical import TechnicalExtractor
+from src.training.targets.trend_target import TrendTargetBuilder
+from src.models.keras_forecaster import KerasForecaster
+from src.models.linear_forecaster import LinearForecaster
 from src.utils.determinism import set_full_determinism
 
 

@@ -1,0 +1,22 @@
+# Pipeline-level defaults. Override per experiment by copying this file.
+seq_len: 20          # input window length (days)
+horizon: 7           # predict up/down trend N days ahead
+train_days: 1000     # how many days of OHLCV to pull for training
+
+# Feature extractor used when none is passed explicitly.
+# New extractors register in src/features/extractors/registry.py.
+extractor:
+  name: technical
+  params:
+    feature_set: A   # A | B | C | E
+
+# Example: regime extractor config
+# extractor:
+#   name: regime
+#   params:
+#     base: {name: technical, params: {feature_set: E}}
+#     short_window: 7
+#     long_window: 30
+#     slope_window: 3
+#     onehot: true
+#     include_label: false

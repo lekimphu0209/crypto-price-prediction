@@ -2,39 +2,42 @@
 Composition Root - the single place that wires concrete adapters together.
 
 This is the ONLY module that knows about concrete implementations
-(BinanceProvider, TechnicalExtractor, TrendTargetBuilder, FileModelRegistry).
+(BinanceProvider, extractor registry, target builders, FileModelRegistry).
 Everything else depends on interfaces. Swap an implementation here to change
 the whole system's behaviour.
+
+Pipeline-level defaults live in configs/default.yaml; model hyperparams live
+in configs/models/<name>.yaml so experiments don't require code edits.
 """
 import os
 
+from src.config import load_config
 from src.infrastructure.data_providers.binance_provider import BinanceProvider
-from src.features.technical_extractor import TechnicalExtractor
-from src.training.return_target_builder import TrendTargetBuilder
-from src.training.regression_target_builder import RegressionTargetBuilder
+from src.features.extractors.registry import build_extractor
+from src.training.targets.trend_target import TrendTargetBuilder
+from src.training.targets.regression_target import RegressionTargetBuilder
 from src.infrastructure.persistence.file_registry import FileModelRegistry
-from src.training.market_data_loader import MarketDataLoader
-from src.training.training_pipeline import TrainingPipeline
-from src.training.predict_pipeline import PredictPipeline
-from src.market_regime.regime_feature_extractor import RegimeFeatureExtractor
+from src.training.datasets.market_data_loader import MarketDataLoader
+from src.training.pipelines.train_pipeline import TrainingPipeline
+from src.training.pipelines.predict_pipeline import PredictPipeline
+from src.features.market_regime.regime_feature_extractor import RegimeFeatureExtractor
 
-# Default config
-SEQ_LEN = 20
-HORIZON = 7  # predict up/down trend 7 days ahead
-TRAIN_DAYS = 1000  # Increased from 400 for better generalization
-MODELS_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-    "models",
-)
-DATA_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-    "data",
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+MODELS_DIR = os.path.join(_PROJECT_ROOT, "models")
+DATA_DIR = os.path.join(_PROJECT_ROOT, "data")
+
+_CONFIG = load_config("default")
+SEQ_LEN = int(_CONFIG.get("seq_len", 20))
+HORIZON = int(_CONFIG.get("horizon", 7))  # predict up/down trend N days ahead
+TRAIN_DAYS = int(_CONFIG.get("train_days", 1000))
+DEFAULT_EXTRACTOR = _CONFIG.get(
+    "extractor", {"name": "technical", "params": {"feature_set": "A"}}
 )
 
 
 def _build_common(extractor=None):
     loader = MarketDataLoader(BinanceProvider(), interval="1d", limit=TRAIN_DAYS)
-    extractor = extractor or TechnicalExtractor()
+    extractor = extractor or build_extractor(DEFAULT_EXTRACTOR)
     target_builder = TrendTargetBuilder()
     registry = FileModelRegistry(MODELS_DIR)
     return loader, extractor, target_builder, registry
@@ -48,7 +51,9 @@ def build_training_pipeline(
     mode: str = "classification",
     target_builder=None,
 ) -> TrainingPipeline:
-    loader, extractor, default_target_builder, registry = _build_common(extractor=extractor)
+    loader, extractor, default_target_builder, registry = _build_common(
+        extractor=extractor
+    )
     if mode == "regression" and target_builder is None:
         target_builder = RegressionTargetBuilder()
     else:
@@ -70,8 +75,7 @@ def build_predict_pipeline(extractor=None) -> PredictPipeline:
     loader, extractor, target_builder, registry = _build_common(extractor=extractor)
     return PredictPipeline(
         loader=loader,
-        extractor=extractor,
-        target_builder=target_builder,
+        extractor=extractor,  # fallback for legacy bundles without extractor_config
         registry=registry,
     )
 
@@ -100,15 +104,17 @@ def build_regime_extractor(
     include_label: bool = False,
 ) -> RegimeFeatureExtractor:
     """Build a TechnicalExtractor + MA-regime wrapper."""
-    base = TechnicalExtractor(feature_set=base_feature_set)
-    return RegimeFeatureExtractor(
-        base_extractor=base,
-        short_window=short_window,
-        long_window=long_window,
-        slope_window=slope_window,
-        onehot=onehot,
-        include_label=include_label,
-    )
+    return build_extractor({
+        "name": "regime",
+        "params": {
+            "base": {"name": "technical", "params": {"feature_set": base_feature_set}},
+            "short_window": short_window,
+            "long_window": long_window,
+            "slope_window": slope_window,
+            "onehot": onehot,
+            "include_label": include_label,
+        },
+    })
 
 
 def build_training_pipeline_with_regime(

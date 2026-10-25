@@ -13,7 +13,7 @@ import pandas as pd
 import yfinance as yf
 
 from src.infrastructure.data_providers.binance_provider import BinanceProvider
-from src.training.market_data_loader import MarketDataLoader
+from src.training.datasets.market_data_loader import MarketDataLoader
 
 OUTPUT_PATH = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),

@@ -32,7 +32,9 @@ MACRO_TICKERS = {
     "usd_rate": ["^TNX"],
 }
 
-_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+_PROJECT_ROOT = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+)
 _MACRO_CACHE = os.path.join(_PROJECT_ROOT, "data", "macro_cache.csv")
 
 
@@ -60,6 +62,22 @@ class TechnicalExtractor(IFeatureExtractor):
         if self.feature_set not in {"A", "B", "C", "E"}:
             raise ValueError("feature_set must be 'A', 'B', 'C', or 'E'")
         self.exclude_features = set(exclude_features or [])
+
+    def to_config(self) -> dict:
+        """Serialize extractor settings so a saved model can rebuild it at predict time."""
+        return {
+            "name": "technical",
+            "params": {
+                "ma_short": self.ma_short,
+                "ma_long": self.ma_long,
+                "rsi_period": self.rsi_period,
+                "bb_window": self.bb_window,
+                "atr_period": self.atr_period,
+                "roc_period": self.roc_period,
+                "feature_set": self.feature_set,
+                "exclude_features": sorted(self.exclude_features),
+            },
+        }
 
     def extract(self, data: pd.DataFrame) -> pd.DataFrame:
         required = {"open", "high", "low", "close", "volume"}

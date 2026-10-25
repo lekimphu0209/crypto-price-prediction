@@ -1,0 +1,4 @@
+# Hyperparams for the Logistic Regression forecaster (LinearForecaster).
+C: 1.0
+class_weight: balanced
+max_iter: 1000

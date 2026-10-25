@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
 
-from .data_providers import (
+from services.data_providers import (
     get_real_prices,
     get_historical_data,
     get_data_providers,

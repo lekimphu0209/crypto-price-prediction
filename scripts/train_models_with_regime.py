@@ -18,7 +18,7 @@ from src.training.composition import (
     build_training_pipeline_with_regime,
     MODELS_DIR,
 )
-from src.infrastructure.forecasters.factory import create_forecaster, SUPPORTED_MODELS
+from src.models.registry import create_forecaster, SUPPORTED_MODELS
 
 SYMBOLS = ["BTCUSDT", "ETHUSDT"]
 

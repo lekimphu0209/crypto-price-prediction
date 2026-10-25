@@ -18,9 +18,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sklearn.preprocessing import RobustScaler
 from src.training.composition import build_training_pipeline, SEQ_LEN, HORIZON
-from src.features.technical_extractor import TechnicalExtractor
-from src.training.return_target_builder import TrendTargetBuilder
-from src.training.window_dataset import WindowDataset
+from src.features.extractors.technical import TechnicalExtractor
+from src.training.targets.trend_target import TrendTargetBuilder
+from src.training.datasets.window_dataset import WindowDataset
 
 MODELS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models")
 RESULTS_FILE = os.path.join(MODELS_DIR, "btc_walkforward_bilstm_results.json")

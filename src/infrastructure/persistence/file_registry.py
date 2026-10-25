@@ -27,7 +27,7 @@ import joblib
 
 from src.domain.interfaces.model_registry import IModelRegistry
 from src.domain.interfaces.forecaster import IForecaster
-from src.infrastructure.forecasters.factory import create_forecaster
+from src.models.registry import create_forecaster
 
 SCALER_FILE = "scaler.pkl"
 META_FILE = "meta.json"
@@ -56,6 +56,8 @@ class FileModelRegistry(IModelRegistry):
         metrics: Dict[str, float],
         horizon: int = 7,
         threshold: float = 0.5,
+        mode: str = "classification",
+        extractor_config: Dict[str, Any] = None,
     ) -> None:
         directory = self._model_dir(symbol, forecaster.name)
         os.makedirs(directory, exist_ok=True)
@@ -71,6 +73,8 @@ class FileModelRegistry(IModelRegistry):
             "n_features": len(feature_names),
             "horizon": horizon,
             "threshold": threshold,
+            "mode": mode,
+            "extractor_config": extractor_config,
             "metrics": metrics,
         }
         with open(os.path.join(directory, META_FILE), "w", encoding="utf-8") as f:
@@ -96,6 +100,9 @@ class FileModelRegistry(IModelRegistry):
             "seq_len": meta["seq_len"],
             "horizon": meta.get("horizon", 7),
             "threshold": meta.get("threshold", 0.5),
+            "mode": meta.get("mode", "classification"),
+            "extractor_config": meta.get("extractor_config"),
+            "model_name": meta.get("model_name", model_name),
             "metrics": meta.get("metrics", {}),
         }
 

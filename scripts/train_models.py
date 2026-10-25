@@ -17,7 +17,7 @@ import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.training.composition import build_training_pipeline, MODELS_DIR
-from src.infrastructure.forecasters.factory import create_forecaster, SUPPORTED_MODELS
+from src.models.registry import create_forecaster, SUPPORTED_MODELS
 
 SYMBOLS = ["BTCUSDT", "ETHUSDT"]
 

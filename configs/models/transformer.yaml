@@ -1,0 +1,8 @@
+# Hyperparams for the Transformer forecaster.
+epochs: 40
+batch_size: 16
+units: 32
+dropout: 0.1
+learning_rate: 0.001
+early_stopping_patience: 10
+validation_split: 0.1

@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pandas as pd
 import numpy as np
-from src.market_regime.regime_feature_extractor import RegimeFeatureExtractor
+from src.features.market_regime.regime_feature_extractor import RegimeFeatureExtractor
 
 
 def test_regime_feature_extractor():

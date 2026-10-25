@@ -8,7 +8,7 @@ import streamlit as st
 import numpy as np
 from datetime import datetime, timedelta
 
-from .data_providers import get_data_providers, get_macro_data
+from services.data_providers import get_data_providers, get_macro_data
 
 
 def render_sentiment_section():
@@ -192,10 +192,10 @@ def render_feature_importance_section():
 
 
 def render_backtesting_section():
-    """Render Backtesting section"""
+    """Render Backtesting section (DEMO mock data)."""
     st.title("💰 Backtesting Results")
     st.markdown("---")
-    
+
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.metric("Total Return", "+34.5%", "")
@@ -205,37 +205,12 @@ def render_backtesting_section():
         st.metric("Sharpe Ratio", "2.1", "")
     with col4:
         st.metric("Max Drawdown", "-10%", "")
-    
+
     st.subheader("Equity Curve")
     dates = pd.date_range(start=datetime.now() - timedelta(days=90), periods=90, freq='D')
     equity = np.cumsum(np.random.randn(90) * 100) + 100000
-    
+
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=dates, y=equity, mode='lines', name='Portfolio Value'))
     fig.update_layout(title="Backtesting Equity Curve (90 Days)", height=400)
     st.plotly_chart(fig, use_container_width=True)
-
-
-def render_system_status_section():
-    """Render System Status section"""
-    st.title("⚙ System Status")
-    st.markdown("---")
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Data Sources", "4/4 Online", "✅")
-    with col2:
-        st.metric("API Response", "125ms", "✅")
-    with col3:
-        st.metric("Training Samples", "50,000", "")
-    
-    st.subheader("Model Status")
-    
-    model_status = {
-        'Model': ['Linear Regression', 'RNN', 'LSTM', 'BiLSTM', 'Transformer', 'Ensemble'],
-        'Status': ['✅ Trained', '✅ Trained', '✅ Trained', '✅ Trained', '✅ Trained', '✅ Active'],
-        'Last Updated': ['2h ago', '2h ago', '2h ago', '2h ago', '2h ago', '2h ago']
-    }
-    
-    df_status = pd.DataFrame(model_status)
-    st.dataframe(df_status, use_container_width=True)

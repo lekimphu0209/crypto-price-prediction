@@ -13,11 +13,11 @@ import numpy as np
 import pandas as pd
 
 from src.training.composition import build_training_pipeline
-from src.features.technical_extractor import TechnicalExtractor
-from src.training.return_target_builder import TrendTargetBuilder
-from src.training.regression_target_builder import RegressionTargetBuilder
-from src.infrastructure.forecasters.keras_forecaster import KerasForecaster
-from src.infrastructure.forecasters.linear_forecaster import LinearForecaster
+from src.features.extractors.technical import TechnicalExtractor
+from src.training.targets.trend_target import TrendTargetBuilder
+from src.training.targets.regression_target import RegressionTargetBuilder
+from src.models.keras_forecaster import KerasForecaster
+from src.models.linear_forecaster import LinearForecaster
 
 
 def create_synthetic_data(n_samples=500):
@@ -71,7 +71,7 @@ def test_classification_pipeline():
     original_train = pipeline.train
     def train_no_val(self, symbol, forecaster, model_name="model", save_csv=False):
         # Skip validation for LinearForecaster
-        from src.training.training_pipeline import TrainingPipeline
+        from src.training.pipelines.train_pipeline import TrainingPipeline
         # Temporarily modify threshold tuning to skip validation
         original_threshold_metric = self.threshold_metric
         self.threshold_metric = "accuracy"  # Use simpler metric
