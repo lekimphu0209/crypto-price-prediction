@@ -24,7 +24,7 @@
   "seq_len": 20,
   "n_features": 18,
   "horizon": 7,
-  "threshold": 0.6399999999999999,
+  "threshold": 0.44999999999999996,
   "mode": "classification",
   "extractor_config": {
     "name": "technical",
@@ -40,15 +40,15 @@
     }
   },
   "metrics": {
-    "accuracy": 0.5078534031413613,
-    "balanced_accuracy": 0.509375,
-    "precision": 0.5033112582781457,
-    "recall": 0.8,
-    "f1": 0.6178861788617886,
-    "threshold": 0.6399999999999999,
-    "tn": 21,
-    "fp": 75,
-    "fn": 19,
-    "tp": 76
+    "accuracy": 0.5248868778280543,
+    "balanced_accuracy": 0.5240535129231889,
+    "precision": 0.5260416666666666,
+    "recall": 0.6029850746268657,
+    "f1": 0.5618915159944368,
+    "threshold": 0.44999999999999996,
+    "tn": 146,
+    "fp": 182,
+    "fn": 133,
+    "tp": 202
   }
 }

@@ -1,7 +1,7 @@
 # Pipeline-level defaults. Override per experiment by copying this file.
 seq_len: 20          # input window length (days)
 horizon: 7           # predict up/down trend N days ahead
-train_days: 1000     # how many days of OHLCV to pull for training
+train_days: 10000    # how many days of OHLCV to pull (>= max BTC history; fetch caps at ~2990 available)
 
 # Feature extractor used when none is passed explicitly.
 # New extractors register in src/features/extractors/registry.py.

@@ -74,9 +74,20 @@ Dựa trên khảo sát tài liệu (`docs/model_research.md`), cho đúng bài 
 # -> ['BiLSTM','LSTM','LightGBM','Logistic Regression','RNN','Transformer']
 # -> params đúng như lightgbm.yaml
 
-# 3. Train trên dữ liệu Binance thật (BTCUSDT, daily, ~1000 ngày)
+# 3. Train trên dữ liệu Binance thật — TOÀN BỘ lịch sử BTCUSDT
+#    (train_days=10000 trong default.yaml → fetch cap ở max khả dụng)
 .venv\Scripts\python.exe backend/scripts/train_one.py --symbol BTCUSDT --model LightGBM
 ```
+
+**Lưu ý về dữ liệu**: `train_days: 10000` yêu cầu lấy tới 10.000 nến ngày từ
+hôm nay lùi về — nhưng BTCUSDT trên Binance chỉ tồn tại từ **2017-08-17**, nên
+kết quả thực tế là **3,357 nến** (2017-08-17 → 2026-10-25, toàn bộ lịch sử
+available). Để vượt cap ~1000 nến/request của Binance API, `fetch_ohlcv` đã
+được nâng cấp thêm:
+- **Pagination** lùi theo thời gian (loop `since`/`endTime`), đủ cho limit bất kỳ.
+- **Raw `klines` endpoint** (`publicGetKlines`) thay `fetch_ohlcv` chuẩn — bỏ
+  qua `load_markets()`/`exchangeInfo` vốn intermittent timeout trên mạng chập chờn.
+- **`enableRateLimit` + retry/backoff** cho NetworkError.
 
 Pipeline (`build_training_pipeline` trong `src/training/composition.py`) thực hiện:
 `Binance OHLCV → TechnicalExtractor (feature_set A: MA, RSI, MACD, BB, ATR, ROC)
@@ -93,22 +104,25 @@ Artifact tạo ra:
 ## 4. Kết quả thật
 
 ```
-LightGBM on BTCUSDT (train 80% / test 20%, chronological):
-  accuracy           0.5079
-  balanced_accuracy  0.5094     <- threshold 0.64 tối ưu cho balanced acc
-  precision          0.5033
-  recall             0.8000
-  f1                 0.6179
-  threshold          0.6400
+LightGBM on BTCUSDT (train 80% / test 20%, chronological, 3,357 nến ngày):
+  accuracy           0.5249
+  balanced_accuracy  0.5241     <- threshold 0.45 tối ưu cho balanced acc
+  precision          0.5260
+  recall             0.6030
+  f1                 0.5619
+  threshold          0.4500
+
+So với lần train trước trên 1000 ngày:  bal_acc 0.5094 -> 0.5241, f1 0.6179 -> 0.5619
+(recall giảm 0.80 -> 0.60 nhưng precision + balanced acc tăng -> cân bằng hơn)
 ```
 
-**Diễn giải trung thực**: kết quả chỉ nhỉnh baseline ngẫu nhiên (0.50) một chút —
-nhất quán với README: trên feature set hiện tại crypto rất khó dự đoán, và
-literature cho thấy gradient boosting chỉ thực sự mạnh khi đi kèm **feature
-selection** (Boruta/LightGBM importance) và **expanding-window retraining**
-(thay vì 1 lần split). Đây là bước cải tiến tiếp theo — hiện tại model hoạt
-động đúng pipeline và tích hợp được API/dashboard, nhưng chưa là cải thiện
-accuracy rõ rệt so với BiLSTM/LSTM.
+**Diễn giải trung thực**: thêm ~2.4x dữ liệu cải thiện nhẹ balanced accuracy
+(+0.015) nhưng vẫn chỉ nhỉnh baseline ngẫu nhiên (0.50) — nhất quán với
+literature: trên feature set hiện tại crypto rất khó dự đoán, và gradient
+boosting chỉ thực sự mạnh khi đi kèm **feature selection** (Boruta/LightGBM
+importance) và **expanding-window retraining** (thay vì 1 lần split). Đây là
+bước cải tiến tiếp theo — hiện tại model hoạt động đúng pipeline và tích hợp
+được API/dashboard, nhưng chưa là cải thiện accuracy rõ rệt so với BiLSTM/LSTM.
 
 Verify bundle tự khôi phục đúng:
 ```python

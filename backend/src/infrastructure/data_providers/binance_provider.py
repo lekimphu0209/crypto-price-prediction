@@ -1,6 +1,8 @@
 """
 Binance Data Provider Implementation
 """
+import time
+
 import pandas as pd
 import numpy as np
 from typing import List, Optional
@@ -17,9 +19,37 @@ class BinanceProvider(IDataSource):
     """Binance data provider implementation"""
     
     def __init__(self):
-        """Initialize Binance client"""
-        self.client = ccxt.binance()
+        """Initialize Binance client (spot markets only, rate-limited)."""
+        self.client = ccxt.binance({
+            "enableRateLimit": True,
+            "options": {"defaultType": "spot"},
+        })
         self._name = "Binance"
+
+    def _fetch_ohlcv_page(self, symbol, timeframe, since, until, limit=1000, retries=4):
+        """
+        Fetch one page of raw Binance klines.
+
+        Calls publicGetKlines directly instead of client.fetch_ohlcv so that
+        no load_markets() / exchangeInfo request is needed (that endpoint is
+        heavy and intermittently times out). Raw kline rows keep the same
+        [ms, open, high, low, close, volume, ...] layout our caller reads.
+        """
+        params = {
+            "symbol": symbol,
+            "interval": timeframe,
+            "startTime": since,
+            "endTime": until,
+            "limit": limit,
+        }
+        last_err = None
+        for attempt in range(retries):
+            try:
+                return self.client.publicGetKlines(params)
+            except ccxt.NetworkError as e:
+                last_err = e
+                time.sleep(1.5 * (attempt + 1))
+        raise last_err
     
     @property
     def name(self) -> str:
@@ -59,30 +89,60 @@ class BinanceProvider(IDataSource):
                 '1d': '1d',
                 '1w': '1w'
             }
-            
+
             ccxt_interval = interval_map.get(interval, '1h')
-            
-            # Fetch data
-            since = None
-            if start_date:
-                since = int(start_date.timestamp() * 1000)
-            
-            ohlcv_data = self.client.fetch_ohlcv(
-                symbol,
-                timeframe=ccxt_interval,
-                limit=limit,
-                since=since
+
+            # Milliseconds per candle, used to walk `since` backwards through
+            # history when `limit` exceeds one API page (~1000 candles).
+            interval_ms = {
+                '1m': 60_000, '5m': 300_000, '15m': 900_000, '30m': 1_800_000,
+                '1h': 3_600_000, '4h': 14_400_000, '1d': 86_400_000,
+                '1w': 604_800_000,
+            }[ccxt_interval]
+
+            # Oldest candle we want: `limit` candles back from now (or from
+            # start_date if the caller gave one).
+            until = int(end_date.timestamp() * 1000) if end_date else int(
+                datetime.utcnow().timestamp() * 1000
             )
-            
+            first_target = (
+                int(start_date.timestamp() * 1000)
+                if start_date else until - limit * interval_ms
+            )
+
+            # Paginate: Binance returns up to ~1000 candles per request, so
+            # loop from first_target forward until we reach `until`.
+            all_rows = []
+            page_since = first_target
+            seen_first = None
+            while True:
+                page = self._fetch_ohlcv_page(
+                    symbol, ccxt_interval, since=page_since, until=until, limit=1000
+                )
+                if not page:
+                    break
+                # Skip duplicate of previous page's last candle
+                rows = page[1:] if seen_first == page[0][0] else page
+                all_rows.extend(rows)
+                last_ts = page[-1][0]
+                seen_first = last_ts
+                # Stop when: exhausted history, reached `until`, or hit limit
+                if len(page) < 1000 or last_ts >= until or len(all_rows) >= limit:
+                    break
+                page_since = last_ts + interval_ms
+
+            if len(all_rows) > limit:
+                all_rows = all_rows[-limit:]
+
             # Convert to OHLCV entities
             ohlcv_list = []
-            for candle in ohlcv_data:
+            for candle in all_rows:
                 timestamp = datetime.fromtimestamp(candle[0] / 1000)
-                
+
                 # Filter by end_date if provided
                 if end_date and timestamp > end_date:
                     continue
-                
+
                 ohlcv = OHLCV(
                     timestamp=timestamp,
                     open=float(candle[1]),
@@ -93,9 +153,9 @@ class BinanceProvider(IDataSource):
                     symbol=symbol
                 )
                 ohlcv_list.append(ohlcv)
-            
+
             return ohlcv_list
-            
+
         except Exception as e:
             raise RuntimeError(f"Error fetching data from Binance: {e}")
     
