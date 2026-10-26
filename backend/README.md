@@ -128,10 +128,37 @@ Verify bundle tự khôi phục đúng:
 ```python
 FileModelRegistry('backend/models').load('BTCUSDT', 'LightGBM')
 # -> forecaster=LightGBM, mode=classification, horizon=7,
-#    threshold=0.64, extractor_config={'name':'technical', params:{feature_set:'A',...}}
+#    threshold=0.45, extractor_config={'name':'technical', params:{feature_set:'A',...}}
 ```
 
-## 5. Cách mở rộng thêm model mới (plugin pattern)
+## 5. Đánh giá đúng chuẩn: walk-forward (26/10/2026)
+
+Single split 80/20 chỉ cho **1 con số lạc quan** trên 1 đoạn test. Đúng chuẩn
+cho time series là **expanding-window** (repeated hold-out — xem
+`docs/slide_mapping.md`):
+
+```bash
+.venv\Scripts\python.exe backend/scripts/walk_forward_eval.py \
+    --model LightGBM --feature-set A --folds 5
+```
+
+`walk_forward_eval.py` mỗi fold: refit scaler chỉ trên train rows → tune
+threshold trên validation slice → forecaster **mới** → đánh giá fold tiếp theo
+chưa thấy. Kết quả thật (BTCUSDT, 3,357 nến, 5 folds):
+
+| Config | bal_acc | acc | f1 |
+|---|---|---|---|
+| feature_set E (42 feat) | 0.5054±0.018 | 0.4812 | 0.397 |
+| E pruned -7 feat (LGBM importance) | 0.5215±0.022 | 0.5055 | 0.435 |
+| **feature_set A (18 feat, production)** | **0.5296±0.028** | 0.5202 | 0.543 |
+
+→ **Feature selection qua `feature_importances_`** (loại 7 feature đuôi:
+dxy_change, bb_middle, gold_change, dxy, ma_14, log_volume, ma_7) cải thiện
+E +0.016 — nhưng bộ A chọn sẵn vẫn tối ưu → giữ config production. Con số
+công bằng của LightGBM là **0.5296±0.028**, không phải 0.5241 của single split.
+Kết quả JSON: `backend/data/*_walkforward_*.json`.
+
+## 6. Cách mở rộng thêm model mới (plugin pattern)
 
 1. Tạo class implement `IForecaster` (`fit`/`predict`/`save`/`load`/`name`) trong
    `src/models/` — xem `linear_forecaster.py` hoặc `lightgbm_forecaster.py`.
